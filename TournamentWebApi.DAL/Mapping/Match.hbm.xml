@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="TournamentWebApi.DAL" namespace="TournamentWebApi.DAL.Entities">
+  <class name="Match" schema="public" table="Matches">
+    <id name="MatchId">
+      <generator class="sequence" />
+    </id>
+    <many-to-one class="TournamentWebApi.DAL.Entities.Player" name="Player1" column="PlayerId" cascade="none">
+      <column name="PlayerId1" />
+    </many-to-one>
+    <many-to-one class="TournamentWebApi.DAL.Entities.Player" name="Player2" column="PlayerId" cascade="none">
+      <column name="PlayerId2" />
+    </many-to-one>
+    <many-to-one class="TournamentWebApi.DAL.Entities.Player" name="Winner" column="PlayerId" cascade="none">
+      <column name="WinnerId" />
+    </many-to-one>
+    <property name="MatchStartTime" column="MatchStartTime" />
+    <property name="Player1PlaysWhite" />
+    <property name="Round" />
+  </class>
+</hibernate-mapping>
