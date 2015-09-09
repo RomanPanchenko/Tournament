@@ -11,6 +11,8 @@ namespace TournamentWebApi.WEB.Mappings
     {
         public static void InitMapping()
         {
+            InitAccountMapping();
+            InitRoleMapping();
             InitPlayerMapping();
             InitMatchMapping();
         }
@@ -74,6 +76,19 @@ namespace TournamentWebApi.WEB.Mappings
                         : new PlayerModel { PlayerId = SpecialPlayerIds.WinnerIdForDrawnGame }))
                 .ForMember(x => x.MatchId, y => y.Ignore())
                 .ForMember(x => x.Result, y => y.Ignore());
+        }
+
+        private static void InitAccountMapping()
+        {
+            Mapper.CreateMap<AccountModel, Account>().ReverseMap();
+        }
+
+        private static void InitRoleMapping()
+        {
+            Mapper.CreateMap<RoleModel, Role>()
+                .ForMember(x => x.Accounts, y => y.Ignore());
+
+            Mapper.CreateMap<Role, RoleModel>();
         }
     }
 }

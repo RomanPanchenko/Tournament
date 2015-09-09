@@ -6,6 +6,16 @@ namespace TournamentWebApi.DAL.Interfaces
     public interface IUnitOfWork : IDisposable
     {
         /// <summary>
+        ///     Returns AccountRepository
+        /// </summary>
+        IGenericRepository<Account> AccountRepository { get; }
+
+        /// <summary>
+        ///     Returns RoleRepository
+        /// </summary>
+        IGenericRepository<Role> RoleRepository { get; }
+
+        /// <summary>
         ///     Returns MatchRepository
         /// </summary>
         IGenericRepository<Match> MatchRepository { get; }

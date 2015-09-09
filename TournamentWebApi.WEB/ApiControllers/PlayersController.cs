@@ -24,8 +24,6 @@ namespace TournamentWebApi.WEB.ApiControllers
                 var players = _playerService.GetAllPlayers();
                 return Request.CreateResponse(HttpStatusCode.OK, players);
             });
-
-            //Hello
         }
 
         // GET api/<controller>/5

@@ -28,3 +28,19 @@ INSERT INTO Players(FirstName, LastName, RegistrationTime, Rate) VALUES
 --INSERT INTO Matches(PlayerId1, PlayerId2, WinnerId, MatchStartTime, Player1PlaysWhite, Round) VALUES 
 --	(1, 2, 2, '2015-07-31 01:00:00', 'true', 1),
 --	(4, 5, 4, '2015-07-31 01:15:00', 'true', 1);
+
+
+insert into sec.accounts (firstname, lastname, email, login, password) values
+('Roman', 'panchenko', 'roman.panchenko@email.com', 'roman', 'password'),
+('Nick', 'Lototskiy', 'nick.lototskiy@email.com', 'nick', 'password'),
+('Alexey', 'Kravtsov', 'alexey.kravtsov@email.com', 'alex', 'password'),
+('Kirill', 'Antonov', 'kirill.antonov@email.com', 'kirill', 'password');
+
+insert into sec.roles (name) values ('Admin'), ('Manager'), ('User');
+
+insert into sec.accountsroleslink (accountid, roleid) values
+(1, 1), (1, 2), (1, 3),
+(2, 1), 
+(3, 2), 
+(4, 2), (4, 3);
+

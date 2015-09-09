@@ -13,6 +13,12 @@ namespace TournamentWebApi.DAL.UnitsOfWorks
         public ISession Session { get; set; }
 
         [Inject]
+        public IGenericRepository<Account> AccountRepository { get; set; }
+
+        [Inject]
+        public IGenericRepository<Role> RoleRepository { get; set; }
+
+        [Inject]
         public IGenericRepository<Match> MatchRepository { get; set; }
 
         [Inject]

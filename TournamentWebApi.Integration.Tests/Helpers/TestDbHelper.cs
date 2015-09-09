@@ -22,10 +22,7 @@ namespace TournamentWebApi.Integration.Tests.Helpers
             connStr = ConfigurationManager.ConnectionStrings["XNU"].ConnectionString;
             conn = new NpgsqlConnection(connStr);
             conn.Open();
-            string query = File.ReadAllText(@"..\..\..\TournamentWebApi.DB\Tables\Players.sql");
-            createdbCmd = new NpgsqlCommand(query, conn);
-            createdbCmd.ExecuteNonQuery();
-            query = File.ReadAllText(@"..\..\..\TournamentWebApi.DB\Tables\Matches.sql");
+            string query = File.ReadAllText(@"..\..\..\TournamentWebApi.DB\Schema\Schema.sql");
             createdbCmd = new NpgsqlCommand(query, conn);
             createdbCmd.ExecuteNonQuery();
             conn.Close();

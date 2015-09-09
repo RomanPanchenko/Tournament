@@ -57,15 +57,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Generators\MatchGenerator.cs" />
+    <Compile Include="Interfaces\IAccountService.cs" />
     <Compile Include="Interfaces\IMatchService.cs" />
     <Compile Include="Interfaces\IPlayerService.cs" />
+    <Compile Include="Interfaces\IRoleService.cs" />
+    <Compile Include="Models\AccountModel.cs" />
     <Compile Include="Models\MatchModel.cs" />
     <Compile Include="Models\PlayerModel.cs" />
+    <Compile Include="Models\RoleModel.cs" />
     <Compile Include="Models\ScoreModel.cs" />
     <Compile Include="Models\PlayersPairModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\AccountService.cs" />
     <Compile Include="Services\MatchService.cs" />
     <Compile Include="Services\PlayerService.cs" />
+    <Compile Include="Services\RoleService.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

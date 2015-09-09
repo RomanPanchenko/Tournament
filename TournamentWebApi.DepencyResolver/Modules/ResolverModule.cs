@@ -26,6 +26,8 @@ namespace TournamentWebApi.DepencyResolver.Modules
             Bind(typeof(IGenericRepository<>)).To(typeof(GenericRepository<>));
             Bind<IPlayerService>().To<PlayerService>();
             Bind<IMatchService>().To<MatchService>();
+            Bind<IAccountService>().To<AccountService>();
+            Bind<IRoleService>().To<RoleService>();
             Bind(typeof(INhSession<>)).To(typeof(NhSession<>));
         }
     }
