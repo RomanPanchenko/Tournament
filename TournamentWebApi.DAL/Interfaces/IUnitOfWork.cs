@@ -1,9 +1,8 @@
-﻿using System;
-using TournamentWebApi.DAL.Entities;
+﻿using TournamentWebApi.DAL.Entities;
 
 namespace TournamentWebApi.DAL.Interfaces
 {
-    public interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork
     {
         /// <summary>
         ///     Returns AccountRepository

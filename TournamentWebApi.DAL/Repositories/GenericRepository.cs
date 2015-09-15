@@ -1,54 +1,57 @@
-﻿using NHibernate;
-using Ninject;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
+using NHibernate;
+using NHibernate.Linq;
 using TournamentWebApi.Core.Enums;
 using TournamentWebApi.DAL.Extensions;
 using TournamentWebApi.DAL.Interfaces;
-using TournamentWebApi.DAL.Wrappers;
 
 namespace TournamentWebApi.DAL.Repositories
 {
     public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
     {
-        private readonly ISession _session;
+        private readonly ISessionFactory _sessionFactory;
 
-        public GenericRepository(ISession session)
+        public GenericRepository(ISessionFactory sessionFactory)
         {
-            _session = session;
+            _sessionFactory = sessionFactory;
         }
-
-        [Inject]
-        public INhSession<TEntity> NhSession { get; set; }
 
         public virtual void Add(TEntity entity)
         {
-            using (ITransaction transaction = _session.BeginTransaction(IsolationLevel.ReadCommitted))
+            ISession session = _sessionFactory.OpenSession();
+            using (ITransaction transaction = session.BeginTransaction(IsolationLevel.ReadCommitted))
             {
-                _session.Save(entity);
+                session.Save(entity);
                 transaction.Commit();
+                session.Dispose();
             }
         }
 
         public virtual void AddRange(IEnumerable<TEntity> entities)
         {
-            using (ITransaction transaction = _session.BeginTransaction(IsolationLevel.ReadCommitted))
+            ISession session = _sessionFactory.OpenSession();
+            using (ITransaction transaction = session.BeginTransaction(IsolationLevel.ReadCommitted))
             {
                 foreach (TEntity entity in entities)
                 {
-                    _session.Save(entity);
+                    session.Save(entity);
                 }
 
                 transaction.Commit();
+                session.Dispose();
             }
         }
 
         public virtual TEntity Get(int id)
         {
-            return _session.Get<TEntity>(id);
+            ISession session = _sessionFactory.OpenSession();
+            var entity = session.Get<TEntity>(id);
+            session.Dispose();
+            return entity;
         }
 
         public virtual IEnumerable<TEntity> GetAll()
@@ -58,13 +61,13 @@ namespace TournamentWebApi.DAL.Repositories
 
         public IEnumerable<TEntity> GetAll(Expression<Func<TEntity, object>> sortCondition, SortDirection sortDirection)
         {
-            IQueryable<TEntity> result = All().SortBy(sortCondition, sortDirection);
+            IQueryable<TEntity> result = All().SortQueryBy(sortCondition, sortDirection);
             return result;
         }
 
         public virtual IEnumerable<TEntity> GetRange(Expression<Func<TEntity, bool>> filterCondition)
         {
-            IQueryable<TEntity> result = All().FilterBy(filterCondition);
+            IQueryable<TEntity> result = All().FilterQueryBy(filterCondition);
             return result;
         }
 
@@ -74,8 +77,8 @@ namespace TournamentWebApi.DAL.Repositories
             SortDirection sortDirection)
         {
             IQueryable<TEntity> result = All()
-                .FilterBy(filterCondition)
-                .SortBy(sortCondition, sortDirection);
+                .FilterQueryBy(filterCondition)
+                .SortQueryBy(sortCondition, sortDirection);
 
             return result;
         }
@@ -86,7 +89,7 @@ namespace TournamentWebApi.DAL.Repositories
             int pageNumber)
         {
             IQueryable<TEntity> result = All()
-                .FilterBy(filterCondition)
+                .FilterQueryBy(filterCondition)
                 .Skip(pageCapacity * (pageNumber - 1))
                 .Take(pageCapacity);
 
@@ -101,8 +104,8 @@ namespace TournamentWebApi.DAL.Repositories
             SortDirection sortDirection)
         {
             IQueryable<TEntity> result = All()
-                .FilterBy(filterCondition)
-                .SortBy(sortCondition, sortDirection)
+                .FilterQueryBy(filterCondition)
+                .SortQueryBy(sortCondition, sortDirection)
                 .Skip(pageCapacity * (pageNumber - 1))
                 .Take(pageCapacity);
 
@@ -111,61 +114,71 @@ namespace TournamentWebApi.DAL.Repositories
 
         public virtual void Update(TEntity entity)
         {
-            using (ITransaction transaction = _session.BeginTransaction(IsolationLevel.ReadCommitted))
+            ISession session = _sessionFactory.OpenSession();
+            using (ITransaction transaction = session.BeginTransaction(IsolationLevel.ReadCommitted))
             {
-                _session.SaveOrUpdate(entity);
+                session.SaveOrUpdate(entity);
                 transaction.Commit();
+                session.Dispose();
             }
         }
 
         public virtual void UpdateRange(IEnumerable<TEntity> entities)
         {
-            using (ITransaction transaction = _session.BeginTransaction(IsolationLevel.ReadCommitted))
+            ISession session = _sessionFactory.OpenSession();
+            using (ITransaction transaction = session.BeginTransaction(IsolationLevel.ReadCommitted))
             {
                 foreach (TEntity entity in entities)
                 {
-                    _session.SaveOrUpdate(entity);
+                    session.SaveOrUpdate(entity);
                 }
 
                 transaction.Commit();
+                session.Dispose();
             }
         }
 
         public virtual void Delete(int id)
         {
-            using (ITransaction transaction = _session.BeginTransaction(IsolationLevel.ReadCommitted))
+            ISession session = _sessionFactory.OpenSession();
+            using (ITransaction transaction = session.BeginTransaction(IsolationLevel.ReadCommitted))
             {
                 TEntity entity = Get(id);
-                _session.Delete(entity);
+                session.Delete(entity);
                 transaction.Commit();
+                session.Dispose();
             }
         }
 
         public virtual void Delete(TEntity entity)
         {
-            using (ITransaction transaction = _session.BeginTransaction(IsolationLevel.ReadCommitted))
+            ISession session = _sessionFactory.OpenSession();
+            using (ITransaction transaction = session.BeginTransaction(IsolationLevel.ReadCommitted))
             {
-                _session.Delete(entity);
+                session.Delete(entity);
                 transaction.Commit();
+                session.Dispose();
             }
         }
 
         public virtual void DeleteRange(IEnumerable<TEntity> entities)
         {
-            using (ITransaction transaction = _session.BeginTransaction(IsolationLevel.ReadCommitted))
+            ISession session = _sessionFactory.OpenSession();
+            using (ITransaction transaction = session.BeginTransaction(IsolationLevel.ReadCommitted))
             {
                 foreach (TEntity entity in entities)
                 {
-                    _session.Delete(entity);
+                    session.Delete(entity);
                 }
 
                 transaction.Commit();
+                session.Dispose();
             }
         }
 
         public virtual int GetRecordsCount(Expression<Func<TEntity, bool>> filterCondition = null)
         {
-            int count = All().FilterBy(filterCondition).Count();
+            int count = All().FilterQueryBy(filterCondition).Count();
             return count;
         }
 
@@ -182,9 +195,12 @@ namespace TournamentWebApi.DAL.Repositories
             return pagesCount;
         }
 
-        private IQueryable<TEntity> All()
+        protected virtual IQueryable<TEntity> All()
         {
-            return NhSession.Query();
+            ISession session = _sessionFactory.OpenSession();
+            IQueryable<TEntity> entities = session.Query<TEntity>();
+            session.Dispose();
+            return entities;
         }
     }
 }

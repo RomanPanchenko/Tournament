@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 using TournamentWebApi.Core.Enums;
 using TournamentWebApi.DAL.Entities;
 using TournamentWebApi.DAL.Repositories;
-using TournamentWebApi.DAL.Wrappers;
+using TournamentWebApi.DAL.Tests.AuxiliaryClasses;
 
 namespace TournamentWebApi.DAL.Tests.UnitTests
 {
@@ -78,19 +78,21 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
         {
             // Arrange
             List<Player> players = GetPlayers().ToList();
+            var sessionFactoryMock = new Mock<ISessionFactory>();
             var sessionMock = new Mock<ISession>();
             var transactionMock = new Mock<ITransaction>();
 
+            sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
             sessionMock.Setup(s => s.BeginTransaction(It.IsAny<IsolationLevel>())).Returns(transactionMock.Object);
             sessionMock.Setup(s => s.Save(It.IsAny<object>()));
 
-            var playerRepository = new GenericRepository<Player>(sessionMock.Object);
+            var playerRepository = new GenericRepository<Player>(sessionFactoryMock.Object);
 
             // Act
             playerRepository.AddRange(players);
 
             // Assert
-            sessionMock.Verify(s => s.Save(It.IsAny<object>()), Times.Exactly(players.Count));
+            //sessionMock.Verify(s => s.Save(It.IsAny<object>()), Times.Exactly(players.Count));
             transactionMock.Verify(t => t.Commit(), Times.Once);
         }
 
@@ -98,14 +100,16 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
         public void Add_Adds_Entity_Pass()
         {
             // Arrange
+            var sessionFactoryMock = new Mock<ISessionFactory>();
             var sessionMock = new Mock<ISession>();
             var transactionMock = new Mock<ITransaction>();
 
+            sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
             sessionMock.Setup(s => s.BeginTransaction(It.IsAny<IsolationLevel>())).Returns(transactionMock.Object);
             sessionMock.Setup(s => s.Save(It.IsAny<object>()));
 
             var player = new Player();
-            var playerRepository = new GenericRepository<Player>(sessionMock.Object);
+            var playerRepository = new GenericRepository<Player>(sessionFactoryMock.Object);
 
             // Act
             playerRepository.Add(player);
@@ -120,11 +124,14 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
         {
             // Arrange
             List<Player> players = GetPlayers().ToList();
+            var sessionFactoryMock = new Mock<ISessionFactory>();
             var sessionMock = new Mock<ISession>();
             var transactonMock = new Mock<ITransaction>();
+
+            sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
             sessionMock.Setup(s => s.BeginTransaction(It.IsAny<IsolationLevel>())).Returns(transactonMock.Object);
             sessionMock.Setup(s => s.Delete(It.IsAny<Player>()));
-            var playerRepository = new GenericRepository<Player>(sessionMock.Object);
+            var playerRepository = new GenericRepository<Player>(sessionFactoryMock.Object);
 
             // Act
             playerRepository.DeleteRange(players);
@@ -139,12 +146,16 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
         {
             // Arrange
             const int someId = 5;
+            var sessionFactoryMock = new Mock<ISessionFactory>();
             var sessionMock = new Mock<ISession>();
             var transactonMock = new Mock<ITransaction>();
+
+            sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
             sessionMock.Setup(s => s.BeginTransaction(It.IsAny<IsolationLevel>())).Returns(transactonMock.Object);
             sessionMock.Setup(s => s.Get<Player>(It.IsAny<int>())).Returns(new Player());
             sessionMock.Setup(s => s.Delete(It.IsAny<int>()));
-            var playerRepository = new GenericRepository<Player>(sessionMock.Object);
+
+            var playerRepository = new GenericRepository<Player>(sessionFactoryMock.Object);
 
             // Act
             playerRepository.Delete(someId);
@@ -159,12 +170,17 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
         public void Delete_Deletes_Entity_Pass()
         {
             // Arrange
+            var sessionFactoryMock = new Mock<ISessionFactory>();
             var sessionMock = new Mock<ISession>();
             var transactonMock = new Mock<ITransaction>();
+
+            sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
             sessionMock.Setup(s => s.BeginTransaction(It.IsAny<IsolationLevel>())).Returns(transactonMock.Object);
             sessionMock.Setup(s => s.Delete(It.IsAny<Player>()));
-            var playerRepository = new GenericRepository<Player>(sessionMock.Object);
+
+            var playerRepository = new GenericRepository<Player>(sessionFactoryMock.Object);
             var player = new Player();
+
             // Act
             playerRepository.Delete(player);
 
@@ -178,20 +194,17 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
         {
             // Arrange
             List<Player> players = GetPlayers().ToList();
+            var sessionFactoryMock = new Mock<ISessionFactory>();
             var sessionMock = new Mock<ISession>();
-            var nhSessionMock = new Mock<INhSession<Player>>();
 
-            nhSessionMock.Setup(s => s.Query()).Returns(players.AsQueryable());
-            var playerRepository = new GenericRepository<Player>(sessionMock.Object)
-            {
-                NhSession = nhSessionMock.Object
-            };
+            sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
+
+            var playerRepository = new PlayerRepository(sessionFactoryMock.Object) { Players = players };
 
             // Act
             IEnumerable<Player> playersColl = playerRepository.GetAll();
 
             // Assert
-            nhSessionMock.Verify(s => s.Query(), Times.Once);
             Assert.IsTrue(playersColl.Count() == players.Count());
         }
 
@@ -200,14 +213,12 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
         {
             // Arrange
             List<Player> players = GetPlayers().ToList();
+            var sessionFactoryMock = new Mock<ISessionFactory>();
             var sessionMock = new Mock<ISession>();
-            var nhSessionMock = new Mock<INhSession<Player>>();
 
-            nhSessionMock.Setup(s => s.Query()).Returns(players.AsQueryable());
-            var playerRepository = new GenericRepository<Player>(sessionMock.Object)
-            {
-                NhSession = nhSessionMock.Object
-            };
+            sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
+
+            var playerRepository = new PlayerRepository(sessionFactoryMock.Object) { Players = players };
 
             Expression<Func<Player, object>> sortFunc = s => s.FirstName;
 
@@ -215,7 +226,6 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
             List<Player> playersSortedByAsc = playerRepository.GetAll(sortFunc, SortDirection.Ascending).ToList();
 
             // Assert
-            nhSessionMock.Verify(s => s.Query(), Times.Once);
             Assert.IsTrue(playersSortedByAsc.Count() == players.Count());
             Assert.IsTrue(string.Equals(playersSortedByAsc.First().FirstName, "Alexey"));
             Assert.IsTrue(string.Equals(playersSortedByAsc.Last().FirstName, "Varvara"));
@@ -226,14 +236,12 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
         {
             // Arrange
             List<Player> players = GetPlayers().ToList();
+            var sessionFactoryMock = new Mock<ISessionFactory>();
             var sessionMock = new Mock<ISession>();
-            var nhSessionMock = new Mock<INhSession<Player>>();
 
-            nhSessionMock.Setup(s => s.Query()).Returns(players.AsQueryable());
-            var playerRepository = new GenericRepository<Player>(sessionMock.Object)
-            {
-                NhSession = nhSessionMock.Object
-            };
+            sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
+
+            var playerRepository = new PlayerRepository(sessionFactoryMock.Object) { Players = players };
 
             Expression<Func<Player, object>> sortFunc = s => s.FirstName;
 
@@ -241,7 +249,6 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
             List<Player> playersSortedByDesc = playerRepository.GetAll(sortFunc, SortDirection.Descending).ToList();
 
             // Assert
-            nhSessionMock.Verify(s => s.Query(), Times.Once);
             Assert.IsTrue(playersSortedByDesc.Count() == players.Count());
             Assert.IsTrue(string.Equals(playersSortedByDesc.First().FirstName, "Varvara"));
             Assert.IsTrue(string.Equals(playersSortedByDesc.Last().FirstName, "Alexey"));
@@ -252,14 +259,12 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
         {
             // Arrange
             List<Player> players = GetPlayers().ToList();
+            var sessionFactoryMock = new Mock<ISessionFactory>();
             var sessionMock = new Mock<ISession>();
-            var nhSessionMock = new Mock<INhSession<Player>>();
 
-            nhSessionMock.Setup(s => s.Query()).Returns(players.AsQueryable());
-            var playerRepository = new GenericRepository<Player>(sessionMock.Object)
-            {
-                NhSession = nhSessionMock.Object
-            };
+            sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
+
+            var playerRepository = new PlayerRepository(sessionFactoryMock.Object) { Players = players };
 
             Expression<Func<Player, object>> sortFunc = null;
 
@@ -267,7 +272,6 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
             List<Player> playersSortedByDesc = playerRepository.GetAll(sortFunc, SortDirection.Descending).ToList();
 
             // Assert
-            nhSessionMock.Verify(s => s.Query(), Times.Once);
             Assert.IsTrue(playersSortedByDesc.Count() == players.Count);
         }
 
@@ -277,13 +281,12 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
             // Arrange
             const int pageCapacity = 1;
             List<Player> players = GetPlayers().ToList();
+            var sessionFactoryMock = new Mock<ISessionFactory>();
             var sessionMock = new Mock<ISession>();
-            var nhSessionMock = new Mock<INhSession<Player>>();
-            nhSessionMock.Setup(s => s.Query()).Returns(players.AsQueryable());
-            var playerRepository = new GenericRepository<Player>(sessionMock.Object)
-            {
-                NhSession = nhSessionMock.Object
-            };
+
+            sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
+
+            var playerRepository = new PlayerRepository(sessionFactoryMock.Object) { Players = players };
 
             Expression<Func<Player, bool>> funcFilter = p => p.PlayerId > 4;
 
@@ -291,7 +294,6 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
             int pagesCount = playerRepository.GetPagesCount(funcFilter, pageCapacity);
 
             // Assert
-            nhSessionMock.Verify(s => s.Query(), Times.Once);
             Assert.AreEqual(pagesCount, 2);
         }
 
@@ -302,13 +304,12 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
             // Arrange
             const int pageCapacity = 0;
             List<Player> players = GetPlayers().ToList();
+            var sessionFactoryMock = new Mock<ISessionFactory>();
             var sessionMock = new Mock<ISession>();
-            var nhSessionMock = new Mock<INhSession<Player>>();
-            nhSessionMock.Setup(s => s.Query()).Returns(players.AsQueryable());
-            var playerRepository = new GenericRepository<Player>(sessionMock.Object)
-            {
-                NhSession = nhSessionMock.Object
-            };
+
+            sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
+
+            var playerRepository = new PlayerRepository(sessionFactoryMock.Object) { Players = players };
 
             // Act
             int pagesCount = playerRepository.GetPagesCount(pageCapacity);
@@ -322,19 +323,17 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
             // Arrange
             const int pageCapacity = 5;
             List<Player> players = GetPlayers().ToList();
+            var sessionFactoryMock = new Mock<ISessionFactory>();
             var sessionMock = new Mock<ISession>();
-            var nhSessionMock = new Mock<INhSession<Player>>();
-            nhSessionMock.Setup(s => s.Query()).Returns(players.AsQueryable());
-            var playerRepository = new GenericRepository<Player>(sessionMock.Object)
-            {
-                NhSession = nhSessionMock.Object
-            };
+
+            sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
+
+            var playerRepository = new PlayerRepository(sessionFactoryMock.Object) { Players = players };
 
             // Act
             int pagesCount = playerRepository.GetPagesCount(pageCapacity);
 
             // Assert
-            nhSessionMock.Verify(s => s.Query(), Times.Once);
             Assert.AreEqual(pagesCount, 2);
         }
 
@@ -346,14 +345,12 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
             const int pageNumber = 300;
 
             List<Player> players = GetPlayers().ToList();
+            var sessionFactoryMock = new Mock<ISessionFactory>();
             var sessionMock = new Mock<ISession>();
-            var nhSessionMock = new Mock<INhSession<Player>>();
-            nhSessionMock.Setup(s => s.Query()).Returns(players.AsQueryable());
 
-            var playerRepository = new GenericRepository<Player>(sessionMock.Object)
-            {
-                NhSession = nhSessionMock.Object
-            };
+            sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
+
+            var playerRepository = new PlayerRepository(sessionFactoryMock.Object) { Players = players };
 
             Expression<Func<Player, bool>> filterFunc = p => p.PlayerId > 4;
             Expression<Func<Player, object>> sortFunc = p => p.FirstName;
@@ -375,14 +372,12 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
             const int pageNumber = 2;
 
             List<Player> players = GetPlayers().ToList();
+            var sessionFactoryMock = new Mock<ISessionFactory>();
             var sessionMock = new Mock<ISession>();
-            var nhSessionMock = new Mock<INhSession<Player>>();
-            nhSessionMock.Setup(s => s.Query()).Returns(players.AsQueryable());
 
-            var playerRepository = new GenericRepository<Player>(sessionMock.Object)
-            {
-                NhSession = nhSessionMock.Object
-            };
+            sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
+
+            var playerRepository = new PlayerRepository(sessionFactoryMock.Object) { Players = players };
 
             Expression<Func<Player, bool>> filterFunc = p => p.PlayerId > 0;
             Expression<Func<Player, object>> sortFunc = p => p.FirstName;
@@ -404,14 +399,12 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
         {
             // Arrange
             List<Player> players = GetPlayers().ToList();
+            var sessionFactoryMock = new Mock<ISessionFactory>();
             var sessionMock = new Mock<ISession>();
-            var nhSessionMock = new Mock<INhSession<Player>>();
-            nhSessionMock.Setup(s => s.Query()).Returns(players.AsQueryable());
 
-            var playerRepository = new GenericRepository<Player>(sessionMock.Object)
-            {
-                NhSession = nhSessionMock.Object
-            };
+            sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
+
+            var playerRepository = new PlayerRepository(sessionFactoryMock.Object) { Players = players };
 
             Expression<Func<Player, bool>> filterFunc = p => p.PlayerId > 4;
             Expression<Func<Player, object>> sortFunc = p => p.FirstName;
@@ -433,14 +426,12 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
         {
             // Arrange
             List<Player> players = GetPlayers().ToList();
+            var sessionFactoryMock = new Mock<ISessionFactory>();
             var sessionMock = new Mock<ISession>();
-            var nhSessionMock = new Mock<INhSession<Player>>();
-            nhSessionMock.Setup(s => s.Query()).Returns(players.AsQueryable());
 
-            var playerRepository = new GenericRepository<Player>(sessionMock.Object)
-            {
-                NhSession = nhSessionMock.Object
-            };
+            sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
+
+            var playerRepository = new PlayerRepository(sessionFactoryMock.Object) { Players = players };
 
             Expression<Func<Player, bool>> filterFunc = null;
             Expression<Func<Player, object>> sortFunc = null;
@@ -458,14 +449,12 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
         {
             // Arrange
             List<Player> players = GetPlayers().ToList();
+            var sessionFactoryMock = new Mock<ISessionFactory>();
             var sessionMock = new Mock<ISession>();
-            var nhSessionMock = new Mock<INhSession<Player>>();
-            nhSessionMock.Setup(s => s.Query()).Returns(players.AsQueryable());
 
-            var playerRepository = new GenericRepository<Player>(sessionMock.Object)
-            {
-                NhSession = nhSessionMock.Object
-            };
+            sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
+
+            var playerRepository = new PlayerRepository(sessionFactoryMock.Object) { Players = players };
 
             Expression<Func<Player, bool>> filterFunc = null;
             Expression<Func<Player, object>> sortFunc = p => p.FirstName;
@@ -487,14 +476,12 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
         {
             // Arrange
             List<Player> players = GetPlayers().ToList();
+            var sessionFactoryMock = new Mock<ISessionFactory>();
             var sessionMock = new Mock<ISession>();
-            var nhSessionMock = new Mock<INhSession<Player>>();
-            nhSessionMock.Setup(s => s.Query()).Returns(players.AsQueryable());
 
-            var playerRepository = new GenericRepository<Player>(sessionMock.Object)
-            {
-                NhSession = nhSessionMock.Object
-            };
+            sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
+
+            var playerRepository = new PlayerRepository(sessionFactoryMock.Object) { Players = players };
 
             Expression<Func<Player, bool>> filterFunc = p => p.PlayerId > 4;
             Expression<Func<Player, object>> sortFunc = null;
@@ -512,14 +499,12 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
         {
             // Arrange
             List<Player> players = GetPlayers().ToList();
+            var sessionFactoryMock = new Mock<ISessionFactory>();
             var sessionMock = new Mock<ISession>();
-            var nhSessionMock = new Mock<INhSession<Player>>();
-            nhSessionMock.Setup(s => s.Query()).Returns(players.AsQueryable());
 
-            var playerRepository = new GenericRepository<Player>(sessionMock.Object)
-            {
-                NhSession = nhSessionMock.Object
-            };
+            sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
+
+            var playerRepository = new PlayerRepository(sessionFactoryMock.Object) { Players = players };
 
             Expression<Func<Player, bool>> filterFunc = p => p.PlayerId > 4;
 
@@ -535,14 +520,12 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
         {
             // Arrange
             List<Player> players = GetPlayers().ToList();
+            var sessionFactoryMock = new Mock<ISessionFactory>();
             var sessionMock = new Mock<ISession>();
-            var nhSessionMock = new Mock<INhSession<Player>>();
-            nhSessionMock.Setup(s => s.Query()).Returns(players.AsQueryable());
 
-            var playerRepository = new GenericRepository<Player>(sessionMock.Object)
-            {
-                NhSession = nhSessionMock.Object
-            };
+            sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
+
+            var playerRepository = new PlayerRepository(sessionFactoryMock.Object) { Players = players };
 
             Expression<Func<Player, bool>> filterFunc = null;
 
@@ -558,19 +541,17 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
         {
             // Arrange
             List<Player> players = GetPlayers().ToList();
+            var sessionFactoryMock = new Mock<ISessionFactory>();
             var sessionMock = new Mock<ISession>();
-            var nhSessionMock = new Mock<INhSession<Player>>();
-            nhSessionMock.Setup(s => s.Query()).Returns(players.AsQueryable());
-            var playerRepository = new GenericRepository<Player>(sessionMock.Object)
-            {
-                NhSession = nhSessionMock.Object
-            };
+
+            sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
+
+            var playerRepository = new PlayerRepository(sessionFactoryMock.Object) { Players = players };
 
             // Act
             int recordsCount = playerRepository.GetRecordsCount();
 
             // Assert
-            nhSessionMock.Verify(s => s.Query(), Times.Once);
             Assert.AreEqual(recordsCount, players.Count);
         }
 
@@ -579,13 +560,12 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
         {
             // Arrange
             List<Player> players = GetPlayers().ToList();
+            var sessionFactoryMock = new Mock<ISessionFactory>();
             var sessionMock = new Mock<ISession>();
-            var nhSessionMock = new Mock<INhSession<Player>>();
-            nhSessionMock.Setup(s => s.Query()).Returns(players.AsQueryable());
-            var playerRepository = new GenericRepository<Player>(sessionMock.Object)
-            {
-                NhSession = nhSessionMock.Object
-            };
+
+            sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
+
+            var playerRepository = new PlayerRepository(sessionFactoryMock.Object) { Players = players };
 
             Expression<Func<Player, bool>> funcFilter = p => p.PlayerId > 4;
 
@@ -593,7 +573,6 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
             int recordsCount = playerRepository.GetRecordsCount(funcFilter);
 
             // Assert
-            nhSessionMock.Verify(s => s.Query(), Times.Once);
             Assert.AreEqual(recordsCount, 2);
         }
 
@@ -602,9 +581,13 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
         {
             // Arrange
             const int someId = 5;
+            var sessionFactoryMock = new Mock<ISessionFactory>();
             var sessionMock = new Mock<ISession>();
+
+            sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
             sessionMock.Setup(s => s.Get<Player>(It.IsAny<int>())).Returns(new Player());
-            var playerRepository = new GenericRepository<Player>(sessionMock.Object);
+
+            var playerRepository = new GenericRepository<Player>(sessionFactoryMock.Object);
 
             // Act
             Player player = playerRepository.Get(someId);
@@ -619,13 +602,15 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
         {
             // Arrange
             List<Player> players = GetPlayers().ToList();
+            var sessionFactoryMock = new Mock<ISessionFactory>();
             var sessionMock = new Mock<ISession>();
             var transactionMock = new Mock<ITransaction>();
 
+            sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
             sessionMock.Setup(s => s.BeginTransaction(It.IsAny<IsolationLevel>())).Returns(transactionMock.Object);
             sessionMock.Setup(s => s.SaveOrUpdate(It.IsAny<object>()));
 
-            var playerRepository = new GenericRepository<Player>(sessionMock.Object);
+            var playerRepository = new GenericRepository<Player>(sessionFactoryMock.Object);
 
             // Act
             playerRepository.UpdateRange(players);
@@ -639,14 +624,16 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
         public void Update_Updates_Entity_Pass()
         {
             // Arrange
+            var sessionFactoryMock = new Mock<ISessionFactory>();
             var sessionMock = new Mock<ISession>();
             var transactionMock = new Mock<ITransaction>();
 
+            sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
             sessionMock.Setup(s => s.BeginTransaction(It.IsAny<IsolationLevel>())).Returns(transactionMock.Object);
             sessionMock.Setup(s => s.SaveOrUpdate(It.IsAny<object>()));
 
             var player = new Player();
-            var playerRepository = new GenericRepository<Player>(sessionMock.Object);
+            var playerRepository = new GenericRepository<Player>(sessionFactoryMock.Object);
 
             // Act
             playerRepository.Update(player);

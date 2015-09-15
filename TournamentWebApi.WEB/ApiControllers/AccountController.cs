@@ -23,6 +23,7 @@ namespace TournamentWebApi.WEB.ApiControllers
 
         // POST api/<controller>
         [HttpPost]
+        [Route("api/account")]
         public async Task<HttpResponseMessage> Post(LoginModel loginModel)
         {
             return await Task.Run(() =>
@@ -53,7 +54,7 @@ namespace TournamentWebApi.WEB.ApiControllers
 
                 string encryptedTicket = FormsAuthentication.Encrypt(authTicket);
                 var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
-                
+
                 HttpContent.Current.Response.Cookies.Add(cookie);
 
             }

@@ -1,46 +1,40 @@
-﻿using NHibernate;
-using Ninject;
-using TournamentWebApi.DAL.Entities;
+﻿using TournamentWebApi.DAL.Entities;
 using TournamentWebApi.DAL.Interfaces;
 
 namespace TournamentWebApi.DAL.UnitsOfWorks
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private bool _disposed;
+        private readonly IRepositoryFactory _repositoryFactory;
 
-        [Inject]
-        public ISession Session { get; set; }
+        private IGenericRepository<Account> _accountRepository;
+        private IGenericRepository<Match> _matchRepository;
+        private IGenericRepository<Player> _playerRepository;
+        private IGenericRepository<Role> _roleRepository;
 
-        [Inject]
-        public IGenericRepository<Account> AccountRepository { get; set; }
-
-        [Inject]
-        public IGenericRepository<Role> RoleRepository { get; set; }
-
-        [Inject]
-        public IGenericRepository<Match> MatchRepository { get; set; }
-
-        [Inject]
-        public IGenericRepository<Player> PlayerRepository { get; set; }
-
-        public void Dispose()
+        public UnitOfWork(IRepositoryFactory repositoryFactory)
         {
-            if (!_disposed)
-            {
-                if (Session.IsOpen)
-                {
-                    Session.Close();
-                    Session.Dispose();
-                }
-
-                _disposed = true;
-            }
+            _repositoryFactory = repositoryFactory;
         }
 
-        ~UnitOfWork()
+        public IGenericRepository<Account> AccountRepository
         {
-            Dispose();
+            get { return _accountRepository ?? (_accountRepository = _repositoryFactory.GetRepository<Account>()); }
+        }
+
+        public IGenericRepository<Match> MatchRepository
+        {
+            get { return _matchRepository ?? (_matchRepository = _repositoryFactory.GetRepository<Match>()); }
+        }
+
+        public IGenericRepository<Player> PlayerRepository
+        {
+            get { return _playerRepository ?? (_playerRepository = _repositoryFactory.GetRepository<Player>()); }
+        }
+
+        public IGenericRepository<Role> RoleRepository
+        {
+            get { return _roleRepository ?? (_roleRepository = _repositoryFactory.GetRepository<Role>()); }
         }
     }
 }

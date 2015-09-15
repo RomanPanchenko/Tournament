@@ -7,7 +7,7 @@ namespace TournamentWebApi.DAL.Extensions
 {
     public static class QueryExtension
     {
-        public static IQueryable<TEntity> FilterBy<TEntity>(
+        public static IQueryable<TEntity> FilterQueryBy<TEntity>(
             this IQueryable<TEntity> source,
             Expression<Func<TEntity, bool>> filterCondition)
         {
@@ -21,7 +21,7 @@ namespace TournamentWebApi.DAL.Extensions
             return result;
         }
 
-        public static IQueryable<TEntity> SortBy<TEntity>(
+        public static IQueryable<TEntity> SortQueryBy<TEntity>(
             this IQueryable<TEntity> source,
             Expression<Func<TEntity, object>> sortCondition,
             SortDirection sortDirection)
