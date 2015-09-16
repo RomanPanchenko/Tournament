@@ -15,7 +15,7 @@ namespace TournamentWebApi.DAL.Tests.AuxiliaryClasses
         {
         }
 
-        protected override IQueryable<Player> All()
+        protected override IQueryable<Player> All(ISession session)
         {
             return Players.AsQueryable();
         }

@@ -8,13 +8,11 @@ namespace TournamentWebApi.WEB.ApiControllers
 {
     public class MatchesController : ApiController
     {
-        private readonly IMatchService _matchService;
-        private readonly IPlayerService _playerService;
+        private readonly IServicesProvider _servicesProvider;
 
-        public MatchesController(IPlayerService playerService, IMatchService matchService)
+        public MatchesController(IServicesProvider servicesProvider)
         {
-            _playerService = playerService;
-            _matchService = matchService;
+            _servicesProvider = servicesProvider;
         }
 
         // GET api/<controller>/5
@@ -24,7 +22,7 @@ namespace TournamentWebApi.WEB.ApiControllers
         {
             return await Task.Run(() =>
             {
-                IEnumerable<MatchModel> matches = _playerService.GetMatches(id, _matchService);
+                IEnumerable<MatchModel> matches = _servicesProvider.MatchService.GetPlayerMatches(id);
                 return matches;
             });
         }

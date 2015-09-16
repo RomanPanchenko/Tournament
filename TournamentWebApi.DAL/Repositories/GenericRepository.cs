@@ -22,53 +22,78 @@ namespace TournamentWebApi.DAL.Repositories
 
         public virtual void Add(TEntity entity)
         {
-            ISession session = _sessionFactory.OpenSession();
-            using (ITransaction transaction = session.BeginTransaction(IsolationLevel.ReadCommitted))
+            using (ISession session = _sessionFactory.OpenSession())
             {
-                session.Save(entity);
-                transaction.Commit();
-                session.Dispose();
+                using (ITransaction transaction = session.BeginTransaction(IsolationLevel.ReadCommitted))
+                {
+                    session.Save(entity);
+                    transaction.Commit();
+                }
             }
         }
 
         public virtual void AddRange(IEnumerable<TEntity> entities)
         {
-            ISession session = _sessionFactory.OpenSession();
-            using (ITransaction transaction = session.BeginTransaction(IsolationLevel.ReadCommitted))
+            using (ISession session = _sessionFactory.OpenSession())
             {
-                foreach (TEntity entity in entities)
+                using (ITransaction transaction = session.BeginTransaction(IsolationLevel.ReadCommitted))
                 {
-                    session.Save(entity);
-                }
+                    foreach (TEntity entity in entities)
+                    {
+                        session.Save(entity);
+                    }
 
-                transaction.Commit();
-                session.Dispose();
+                    transaction.Commit();
+                }
             }
         }
 
         public virtual TEntity Get(int id)
         {
-            ISession session = _sessionFactory.OpenSession();
-            var entity = session.Get<TEntity>(id);
-            session.Dispose();
+            TEntity entity;
+
+            using (ISession session = _sessionFactory.OpenSession())
+            {
+                entity = session.Get<TEntity>(id);
+            }
+
             return entity;
         }
 
         public virtual IEnumerable<TEntity> GetAll()
         {
-            return All();
+            var entities = new List<TEntity>();
+
+            using (ISession session = _sessionFactory.OpenSession())
+            {
+                entities.AddRange(All(session).AsEnumerable());
+            }
+
+            return entities;
         }
 
         public IEnumerable<TEntity> GetAll(Expression<Func<TEntity, object>> sortCondition, SortDirection sortDirection)
         {
-            IQueryable<TEntity> result = All().SortQueryBy(sortCondition, sortDirection);
-            return result;
+            var entities = new List<TEntity>();
+
+            using (ISession session = _sessionFactory.OpenSession())
+            {
+                entities.AddRange(All(session).SortQueryBy(sortCondition, sortDirection).AsEnumerable());
+            }
+
+            return entities;
         }
 
         public virtual IEnumerable<TEntity> GetRange(Expression<Func<TEntity, bool>> filterCondition)
         {
-            IQueryable<TEntity> result = All().FilterQueryBy(filterCondition);
-            return result;
+            var entities = new List<TEntity>();
+
+            using (ISession session = _sessionFactory.OpenSession())
+            {
+                entities.AddRange(All(session).FilterQueryBy(filterCondition));
+            }
+
+            return entities;
         }
 
         public IEnumerable<TEntity> GetRange(
@@ -76,11 +101,14 @@ namespace TournamentWebApi.DAL.Repositories
             Expression<Func<TEntity, object>> sortCondition,
             SortDirection sortDirection)
         {
-            IQueryable<TEntity> result = All()
-                .FilterQueryBy(filterCondition)
-                .SortQueryBy(sortCondition, sortDirection);
+            var entities = new List<TEntity>();
 
-            return result;
+            using (ISession session = _sessionFactory.OpenSession())
+            {
+                entities.AddRange(All(session).FilterQueryBy(filterCondition).SortQueryBy(sortCondition, sortDirection));
+            }
+
+            return entities;
         }
 
         public virtual IEnumerable<TEntity> GetRange(
@@ -88,12 +116,14 @@ namespace TournamentWebApi.DAL.Repositories
             int pageCapacity,
             int pageNumber)
         {
-            IQueryable<TEntity> result = All()
-                .FilterQueryBy(filterCondition)
-                .Skip(pageCapacity * (pageNumber - 1))
-                .Take(pageCapacity);
+            var entities = new List<TEntity>();
 
-            return result;
+            using (ISession session = _sessionFactory.OpenSession())
+            {
+                entities.AddRange(All(session).FilterQueryBy(filterCondition).Skip(pageCapacity * (pageNumber - 1)).Take(pageCapacity));
+            }
+
+            return entities;
         }
 
         public virtual IEnumerable<TEntity> GetRange(
@@ -103,82 +133,100 @@ namespace TournamentWebApi.DAL.Repositories
             Expression<Func<TEntity, object>> sortCondition,
             SortDirection sortDirection)
         {
-            IQueryable<TEntity> result = All()
-                .FilterQueryBy(filterCondition)
-                .SortQueryBy(sortCondition, sortDirection)
-                .Skip(pageCapacity * (pageNumber - 1))
-                .Take(pageCapacity);
+            var entities = new List<TEntity>();
 
-            return result;
+            using (ISession session = _sessionFactory.OpenSession())
+            {
+                entities.AddRange(
+                    All(session)
+                    .FilterQueryBy(filterCondition)
+                    .SortQueryBy(sortCondition, sortDirection)
+                    .Skip(pageCapacity * (pageNumber - 1))
+                    .Take(pageCapacity));
+            }
+
+            return entities;
         }
 
         public virtual void Update(TEntity entity)
         {
-            ISession session = _sessionFactory.OpenSession();
-            using (ITransaction transaction = session.BeginTransaction(IsolationLevel.ReadCommitted))
+            using (ISession session = _sessionFactory.OpenSession())
             {
-                session.SaveOrUpdate(entity);
-                transaction.Commit();
-                session.Dispose();
+                using (ITransaction transaction = session.BeginTransaction(IsolationLevel.ReadCommitted))
+                {
+                    session.SaveOrUpdate(entity);
+                    transaction.Commit();
+                }
             }
         }
 
         public virtual void UpdateRange(IEnumerable<TEntity> entities)
         {
-            ISession session = _sessionFactory.OpenSession();
-            using (ITransaction transaction = session.BeginTransaction(IsolationLevel.ReadCommitted))
-            {
-                foreach (TEntity entity in entities)
-                {
-                    session.SaveOrUpdate(entity);
-                }
 
-                transaction.Commit();
-                session.Dispose();
+            using (ISession session = _sessionFactory.OpenSession())
+            {
+                using (ITransaction transaction = session.BeginTransaction(IsolationLevel.ReadCommitted))
+                {
+                    foreach (TEntity entity in entities)
+                    {
+                        session.SaveOrUpdate(entity);
+                    }
+
+                    transaction.Commit();
+                }
             }
         }
 
         public virtual void Delete(int id)
         {
-            ISession session = _sessionFactory.OpenSession();
-            using (ITransaction transaction = session.BeginTransaction(IsolationLevel.ReadCommitted))
+            using (ISession session = _sessionFactory.OpenSession())
             {
-                TEntity entity = Get(id);
-                session.Delete(entity);
-                transaction.Commit();
-                session.Dispose();
+                using (ITransaction transaction = session.BeginTransaction(IsolationLevel.ReadCommitted))
+                {
+                    TEntity entity = Get(id);
+                    session.Delete(entity);
+                    transaction.Commit();
+                }
             }
         }
 
         public virtual void Delete(TEntity entity)
         {
-            ISession session = _sessionFactory.OpenSession();
-            using (ITransaction transaction = session.BeginTransaction(IsolationLevel.ReadCommitted))
+            using (ISession session = _sessionFactory.OpenSession())
             {
-                session.Delete(entity);
-                transaction.Commit();
-                session.Dispose();
+                using (ITransaction transaction = session.BeginTransaction(IsolationLevel.ReadCommitted))
+                {
+                    session.Delete(entity);
+                    transaction.Commit();
+                }
             }
         }
 
         public virtual void DeleteRange(IEnumerable<TEntity> entities)
         {
-            ISession session = _sessionFactory.OpenSession();
-            using (ITransaction transaction = session.BeginTransaction(IsolationLevel.ReadCommitted))
+            using (ISession session = _sessionFactory.OpenSession())
             {
-                foreach (TEntity entity in entities)
+                using (ITransaction transaction = session.BeginTransaction(IsolationLevel.ReadCommitted))
                 {
-                    session.Delete(entity);
-                }
+                    foreach (TEntity entity in entities)
+                    {
+                        session.Delete(entity);
+                    }
 
-                transaction.Commit();
-                session.Dispose();
+                    transaction.Commit();
+                }
             }
         }
 
         public virtual int GetRecordsCount(Expression<Func<TEntity, bool>> filterCondition = null)
         {
-            int count = All().FilterQueryBy(filterCondition).Count();
+            int count;
+
+            using (ISession session = _sessionFactory.OpenSession())
+            {
+                count = All(session).FilterQueryBy(filterCondition).Count();
+            }
+
             return count;
         }
 
@@ -195,11 +243,9 @@ namespace TournamentWebApi.DAL.Repositories
             return pagesCount;
         }
 
-        protected virtual IQueryable<TEntity> All()
+        protected virtual IQueryable<TEntity> All(ISession session)
         {
-            ISession session = _sessionFactory.OpenSession();
             IQueryable<TEntity> entities = session.Query<TEntity>();
-            session.Dispose();
             return entities;
         }
     }

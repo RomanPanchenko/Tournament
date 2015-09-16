@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NHibernate.Util;
 using TournamentWebApi.BLL.Interfaces;
 using TournamentWebApi.BLL.Models;
 using TournamentWebApi.Core.Constants;
@@ -9,7 +10,7 @@ using TournamentWebApi.Core.Enums;
 
 namespace TournamentWebApi.BLL.Generators
 {
-    public class MatchGenerator
+    public class MatchGenerator : IMatchGenerator
     {
         private readonly IPlayerService _playerService;
         private readonly IMatchService _matchService;
@@ -66,42 +67,53 @@ namespace TournamentWebApi.BLL.Generators
         private void BuildPlayerChessColorMap()
         {
             PlayerChessColorMap.Clear();
+
             if (Matches.Count > 0)
             {
                 foreach (MatchModel matchModel in Matches)
                 {
-                    if (!PlayerChessColorMap.ContainsKey(matchModel.Player1.PlayerId))
-                    {
-                        PlayerChessColorMap[matchModel.Player1.PlayerId] = new List<ChessColor>();
-                    }
-                    PlayerChessColorMap[matchModel.Player1.PlayerId].Add(matchModel.Player1PlaysWhite
-                        ? ChessColor.White
-                        : ChessColor.Black);
-
-                    if (!PlayerChessColorMap.ContainsKey(matchModel.Player2.PlayerId))
-                    {
-                        PlayerChessColorMap[matchModel.Player2.PlayerId] = new List<ChessColor>();
-                    }
-                    PlayerChessColorMap[matchModel.Player2.PlayerId].Add(matchModel.Player1PlaysWhite
-                        ? ChessColor.Black
-                        : ChessColor.White);
+                    BuildColorMapForBothPlayersInMatch(matchModel);
                 }
             }
             else
             {
-                var color = ChessColor.White;
-                foreach (PlayerModel playerModel in Players)
-                {
-                    PlayerChessColorMap[playerModel.PlayerId] = new List<ChessColor> { color };
-                    color = (color == ChessColor.White) ? ChessColor.Black : ChessColor.White;
-                }
+                AssignRandomColorsForPlayers();
             }
 
-            // Reverse dictionary to get latest history on top
-            foreach (KeyValuePair<int, List<ChessColor>> keyValuePair in PlayerChessColorMap)
+            // Reverse valus of the dictionary to get latest history on top
+            foreach (List<ChessColor> list in PlayerChessColorMap.Values)
             {
-                keyValuePair.Value.Reverse();
+                list.Reverse();
             }
+        }
+
+        private void AssignRandomColorsForPlayers()
+        {
+            var color = ChessColor.White;
+            foreach (PlayerModel playerModel in Players)
+            {
+                PlayerChessColorMap[playerModel.PlayerId] = new List<ChessColor> { color };
+                color = (color == ChessColor.White) ? ChessColor.Black : ChessColor.White;
+            }
+        }
+
+        private void BuildColorMapForBothPlayersInMatch(MatchModel matchModel)
+        {
+            if (!PlayerChessColorMap.ContainsKey(matchModel.Player1.PlayerId))
+            {
+                PlayerChessColorMap[matchModel.Player1.PlayerId] = new List<ChessColor>();
+            }
+            PlayerChessColorMap[matchModel.Player1.PlayerId].Add(matchModel.Player1PlaysWhite
+                ? ChessColor.White
+                : ChessColor.Black);
+
+            if (!PlayerChessColorMap.ContainsKey(matchModel.Player2.PlayerId))
+            {
+                PlayerChessColorMap[matchModel.Player2.PlayerId] = new List<ChessColor>();
+            }
+            PlayerChessColorMap[matchModel.Player2.PlayerId].Add(matchModel.Player1PlaysWhite
+                ? ChessColor.Black
+                : ChessColor.White);
         }
 
 
@@ -350,6 +362,11 @@ namespace TournamentWebApi.BLL.Generators
                 _matchService.AddRange(matchModels);
 
             }
+        }
+
+        public IEnumerable<MatchModel> GetMatchesForNextRound(IEnumerable<PlayerModel> players, IEnumerable<MatchModel> pastMatches)
+        {
+            throw new NotImplementedException();
         }
     }
 }

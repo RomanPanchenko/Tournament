@@ -23,19 +23,47 @@ namespace TournamentWebApi.BLL.Interfaces
         /// <summary>
         ///     Gets all matches from database
         /// </summary>
+        /// <returns>MathModel entities collection</returns>
         IEnumerable<MatchModel> GetAllMatches();
 
         /// <summary>
         ///     Gets specific match model by its Id
         /// </summary>
         /// <param name="matchId">MatchId</param>
+        /// <returns>MathModel entity</returns>
         MatchModel Get(int matchId);
 
         /// <summary>
         ///     Gets all matches filtered by filter condition
         /// </summary>
         /// <param name="filterCondition"></param>
-        /// <returns></returns>
+        /// <returns>MathModel entities collection filtered by filterCondition</returns>
         IEnumerable<MatchModel> GetRange(Expression<Func<Match, bool>> filterCondition);
+
+        /// <summary>
+        ///     Generates matches for next round
+        /// </summary>
+        /// <returns>MathModel entities collection</returns>
+        IEnumerable<MatchModel> GenerateMatchesForNextRound();
+
+        /// <summary>
+        ///     Gets player score
+        /// </summary>
+        /// <param name="playerId"></param>
+        /// <returns>ScoreModel entity</returns>
+        ScoreModel GetPlayerScore(int playerId);
+
+        /// <summary>
+        ///     Gets scores for all players
+        /// </summary>
+        /// <returns>ScoreModel entities collection for all players</returns>
+        IEnumerable<ScoreModel> GetScoreForAllPlayers();
+
+        /// <summary>
+        ///     Gets all matches for specified player
+        /// </summary>
+        /// <param name="playerId"></param>
+        /// <returns>MatchModel entities collection for the given player id</returns>
+        IEnumerable<MatchModel> GetPlayerMatches(int playerId);
     }
 }

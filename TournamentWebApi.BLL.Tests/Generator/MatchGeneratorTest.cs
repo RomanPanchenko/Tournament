@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
-using NHibernate.Cfg;
+using Ninject;
+using Ninject.Modules;
 using NUnit.Framework;
-using TournamentWebApi.BLL.Generators;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using TournamentWebApi.BLL.Interfaces;
-using TournamentWebApi.BLL.Services;
-using TournamentWebApi.DAL.Factories;
-using TournamentWebApi.DAL.Interfaces;
-using TournamentWebApi.DAL.UnitsOfWorks;
+using TournamentWebApi.DepencyResolver.Modules;
 using TournamentWebApi.WEB.Mappings;
 
 namespace TournamentWebApi.BLL.Tests.Generator
@@ -14,29 +14,31 @@ namespace TournamentWebApi.BLL.Tests.Generator
     [TestFixture]
     public class MatchGeneratorTest
     {
-        private IMatchService _matchService;
-        private IPlayerService _playerService;
-        private IUnitOfWork _unitOfWork;
+        private IServicesProvider _servicesProvider;
+        public IKernel Kernel { get; private set; }
 
         [SetUp]
         public void SetUp()
         {
+            Kernel = new StandardKernel();
+            var modules = new List<INinjectModule>
+            {
+                new ResolverModule(),
+            };
+
+            Kernel.Load(modules);
+
             Mapping.InitMapping();
             Mapper.AssertConfigurationIsValid();
 
-            var configuration = new Configuration();
-            configuration.Configure();
-            var sessionFactory = configuration.BuildSessionFactory();
-            _unitOfWork = new UnitOfWork(new RepositoryFactory(sessionFactory));
-            _playerService = new PlayerService(_unitOfWork);
-            _matchService = new MatchService(_unitOfWork);
+            _servicesProvider = Kernel.Get<IServicesProvider>();
         }
 
         [Test]
         public void GenerateMatches()
         {
-            var matchGenetator = new MatchGenerator(_playerService, _matchService);
-            matchGenetator.GenerateMatches();
+            var players = _servicesProvider.PlayerService.GetAllPlayers().ToList();
+            Assert.IsTrue(players.Count == 21);
         }
 
     }

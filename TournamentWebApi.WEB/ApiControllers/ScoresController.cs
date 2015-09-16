@@ -10,13 +10,11 @@ namespace TournamentWebApi.WEB.ApiControllers
 {
     public class ScoresController : ApiController
     {
-        private readonly IMatchService _matchService;
-        private readonly IPlayerService _playerService;
+        private readonly IServicesProvider _servicesProvider;
 
-        public ScoresController(IPlayerService playerService, IMatchService matchService)
+        public ScoresController(IServicesProvider servicesProvider)
         {
-            _playerService = playerService;
-            _matchService = matchService;
+            _servicesProvider = servicesProvider;
         }
 
 
@@ -27,7 +25,7 @@ namespace TournamentWebApi.WEB.ApiControllers
         {
             return await Task.Run(() =>
             {
-                IEnumerable<ScoreModel> scores = _playerService.GetAllPlayersScore(_matchService);
+                IEnumerable<ScoreModel> scores = _servicesProvider.MatchService.GetScoreForAllPlayers();
                 return Request.CreateResponse(HttpStatusCode.OK, scores);
             });
         }
@@ -39,7 +37,7 @@ namespace TournamentWebApi.WEB.ApiControllers
         {
             return await Task.Run(() =>
             {
-                ScoreModel playerModel = _playerService.GetPlayerScore(id, _matchService);
+                ScoreModel playerModel = _servicesProvider.MatchService.GetPlayerScore(id);
                 return Request.CreateResponse(HttpStatusCode.OK, playerModel);
             });
         }

@@ -111,6 +111,10 @@
       <Project>{FB5A9DF1-718F-492D-A020-720B0748B298}</Project>
       <Name>TournamentWebApi.DAL</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TournamentWebApi.DepencyResolver\TournamentWebApi.DepencyResolver.csproj">
+      <Project>{989FEB6A-9E3E-4A17-8D71-C721373BD1A8}</Project>
+      <Name>TournamentWebApi.DepencyResolver</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TournamentWebApi.WEB\TournamentWebApi.WEB.csproj">
       <Project>{88868497-996C-47BB-9032-90CF82080605}</Project>
       <Name>TournamentWebApi.WEB</Name>
