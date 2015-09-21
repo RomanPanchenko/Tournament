@@ -3,7 +3,7 @@ using TournamentWebApi.BLL.Interfaces;
 
 namespace TournamentWebApi.BLL.Services
 {
-    public class ServicesProvider : IServicesProvider
+    public class TournamentServiceProvider : ITournamentServiceProvider
     {
         private readonly Lazy<IAccountService> _lazyAccountService;
         private readonly Lazy<IMatchService> _lazyMatchService;
@@ -30,7 +30,7 @@ namespace TournamentWebApi.BLL.Services
             get { return _lazyRoleService.Value; }
         }
 
-        public ServicesProvider(
+        public TournamentServiceProvider(
             Lazy<IAccountService> lazyAccountService,
             Lazy<IMatchService> lazyMatchService,
             Lazy<IPlayerService> lazyPlayerService,

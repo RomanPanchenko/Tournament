@@ -72,7 +72,7 @@ namespace TournamentWebApi.DAL.Repositories
             return entities;
         }
 
-        public IEnumerable<TEntity> GetAll(Expression<Func<TEntity, object>> sortCondition, SortDirection sortDirection)
+        public virtual IEnumerable<TEntity> GetAll(Expression<Func<TEntity, object>> sortCondition, SortDirection sortDirection)
         {
             var entities = new List<TEntity>();
 
@@ -96,7 +96,7 @@ namespace TournamentWebApi.DAL.Repositories
             return entities;
         }
 
-        public IEnumerable<TEntity> GetRange(
+        public virtual IEnumerable<TEntity> GetRange(
             Expression<Func<TEntity, bool>> filterCondition,
             Expression<Func<TEntity, object>> sortCondition,
             SortDirection sortDirection)

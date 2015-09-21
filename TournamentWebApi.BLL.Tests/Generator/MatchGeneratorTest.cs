@@ -14,7 +14,7 @@ namespace TournamentWebApi.BLL.Tests.Generator
     [TestFixture]
     public class MatchGeneratorTest
     {
-        private IServicesProvider _servicesProvider;
+        private ITournamentServiceProvider _servicesProvider;
         public IKernel Kernel { get; private set; }
 
         [SetUp]
@@ -31,7 +31,7 @@ namespace TournamentWebApi.BLL.Tests.Generator
             Mapping.InitMapping();
             Mapper.AssertConfigurationIsValid();
 
-            _servicesProvider = Kernel.Get<IServicesProvider>();
+            _servicesProvider = Kernel.Get<ITournamentServiceProvider>();
         }
 
         [Test]

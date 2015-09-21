@@ -6,11 +6,11 @@ using TournamentWebApi.DAL.Repositories;
 
 namespace TournamentWebApi.DAL.Tests.AuxiliaryClasses
 {
-    internal class PlayerRepository : GenericRepository<Player>
+    internal class StubPlayerRepository : PlayerRepository
     {
         public List<Player> Players { get; set; }
 
-        public PlayerRepository(ISessionFactory sessionFactory)
+        public StubPlayerRepository(ISessionFactory sessionFactory)
             : base(sessionFactory)
         {
         }

@@ -20,11 +20,8 @@ namespace TournamentWebApi.WEB.Mappings
         private static void InitPlayerMapping()
         {
             Mapper.CreateMap<Player, PlayerModel>()
-                .ForMember(x => x.OponentsIds, y => y.Ignore())
-                .ForMember(x => x.StronglyPreferredColor, y => y.Ignore())
                 .ForMember(x => x.ChessColor, y => y.Ignore())
-                .ForMember(x => x.Winner, y => y.Ignore())
-                .ForMember(x => x.HasPair, y => y.Ignore());
+                .ForMember(x => x.Winner, y => y.Ignore());
 
             Mapper.CreateMap<PlayerModel, Player>()
                 .ForMember(x => x.Player1Matches, y => y.Ignore())
@@ -44,10 +41,7 @@ namespace TournamentWebApi.WEB.Mappings
                 .ForMember(x => x.Matches, y => y.Ignore());
 
             Mapper.CreateMap<PlayerViewModel, PlayerModel>()
-                .ForMember(x => x.OponentsIds, y => y.Ignore())
-                .ForMember(x => x.StronglyPreferredColor, y => y.Ignore())
-                .ForMember(x => x.Winner, y => y.Ignore())
-                .ForMember(x => x.HasPair, y => y.Ignore());
+                .ForMember(x => x.Winner, y => y.Ignore());
         }
 
         private static void InitMatchMapping()

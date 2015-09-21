@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using System.Collections.Generic;
-using System.Linq;
 using TournamentWebApi.BLL.Interfaces;
 using TournamentWebApi.BLL.Models;
-using TournamentWebApi.Core.Constants;
 using TournamentWebApi.DAL.Entities;
 using TournamentWebApi.DAL.Interfaces;
 
@@ -27,7 +25,7 @@ namespace TournamentWebApi.BLL.Services
 
         public IEnumerable<PlayerModel> GetAllPlayers()
         {
-            IEnumerable<Player> players = _unitOfWork.PlayerRepository.GetRange(p => p.PlayerId > 0);
+            IEnumerable<Player> players = _unitOfWork.PlayerRepository.GetAll();
             var playerModels = Mapper.Map<IEnumerable<PlayerModel>>(players);
             return playerModels;
         }

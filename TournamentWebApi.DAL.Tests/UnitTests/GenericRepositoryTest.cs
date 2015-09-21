@@ -199,7 +199,7 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
 
             sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
 
-            var playerRepository = new PlayerRepository(sessionFactoryMock.Object) { Players = players };
+            var playerRepository = new StubPlayerRepository(sessionFactoryMock.Object) { Players = players };
 
             // Act
             IEnumerable<Player> playersColl = playerRepository.GetAll();
@@ -218,7 +218,7 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
 
             sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
 
-            var playerRepository = new PlayerRepository(sessionFactoryMock.Object) { Players = players };
+            var playerRepository = new StubPlayerRepository(sessionFactoryMock.Object) { Players = players };
 
             Expression<Func<Player, object>> sortFunc = s => s.FirstName;
 
@@ -241,7 +241,7 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
 
             sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
 
-            var playerRepository = new PlayerRepository(sessionFactoryMock.Object) { Players = players };
+            var playerRepository = new StubPlayerRepository(sessionFactoryMock.Object) { Players = players };
 
             Expression<Func<Player, object>> sortFunc = s => s.FirstName;
 
@@ -264,7 +264,7 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
 
             sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
 
-            var playerRepository = new PlayerRepository(sessionFactoryMock.Object) { Players = players };
+            var playerRepository = new StubPlayerRepository(sessionFactoryMock.Object) { Players = players };
 
             Expression<Func<Player, object>> sortFunc = null;
 
@@ -286,7 +286,7 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
 
             sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
 
-            var playerRepository = new PlayerRepository(sessionFactoryMock.Object) { Players = players };
+            var playerRepository = new StubPlayerRepository(sessionFactoryMock.Object) { Players = players };
 
             Expression<Func<Player, bool>> funcFilter = p => p.PlayerId > 4;
 
@@ -309,7 +309,7 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
 
             sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
 
-            var playerRepository = new PlayerRepository(sessionFactoryMock.Object) { Players = players };
+            var playerRepository = new StubPlayerRepository(sessionFactoryMock.Object) { Players = players };
 
             // Act
             int pagesCount = playerRepository.GetPagesCount(pageCapacity);
@@ -328,7 +328,7 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
 
             sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
 
-            var playerRepository = new PlayerRepository(sessionFactoryMock.Object) { Players = players };
+            var playerRepository = new StubPlayerRepository(sessionFactoryMock.Object) { Players = players };
 
             // Act
             int pagesCount = playerRepository.GetPagesCount(pageCapacity);
@@ -350,7 +350,7 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
 
             sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
 
-            var playerRepository = new PlayerRepository(sessionFactoryMock.Object) { Players = players };
+            var playerRepository = new StubPlayerRepository(sessionFactoryMock.Object) { Players = players };
 
             Expression<Func<Player, bool>> filterFunc = p => p.PlayerId > 4;
             Expression<Func<Player, object>> sortFunc = p => p.FirstName;
@@ -377,7 +377,7 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
 
             sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
 
-            var playerRepository = new PlayerRepository(sessionFactoryMock.Object) { Players = players };
+            var playerRepository = new StubPlayerRepository(sessionFactoryMock.Object) { Players = players };
 
             Expression<Func<Player, bool>> filterFunc = p => p.PlayerId > 0;
             Expression<Func<Player, object>> sortFunc = p => p.FirstName;
@@ -404,7 +404,7 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
 
             sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
 
-            var playerRepository = new PlayerRepository(sessionFactoryMock.Object) { Players = players };
+            var playerRepository = new StubPlayerRepository(sessionFactoryMock.Object) { Players = players };
 
             Expression<Func<Player, bool>> filterFunc = p => p.PlayerId > 4;
             Expression<Func<Player, object>> sortFunc = p => p.FirstName;
@@ -431,7 +431,7 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
 
             sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
 
-            var playerRepository = new PlayerRepository(sessionFactoryMock.Object) { Players = players };
+            var playerRepository = new StubPlayerRepository(sessionFactoryMock.Object) { Players = players };
 
             Expression<Func<Player, bool>> filterFunc = null;
             Expression<Func<Player, object>> sortFunc = null;
@@ -454,7 +454,7 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
 
             sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
 
-            var playerRepository = new PlayerRepository(sessionFactoryMock.Object) { Players = players };
+            var playerRepository = new StubPlayerRepository(sessionFactoryMock.Object) { Players = players };
 
             Expression<Func<Player, bool>> filterFunc = null;
             Expression<Func<Player, object>> sortFunc = p => p.FirstName;
@@ -481,7 +481,7 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
 
             sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
 
-            var playerRepository = new PlayerRepository(sessionFactoryMock.Object) { Players = players };
+            var playerRepository = new StubPlayerRepository(sessionFactoryMock.Object) { Players = players };
 
             Expression<Func<Player, bool>> filterFunc = p => p.PlayerId > 4;
             Expression<Func<Player, object>> sortFunc = null;
@@ -504,7 +504,7 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
 
             sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
 
-            var playerRepository = new PlayerRepository(sessionFactoryMock.Object) { Players = players };
+            var playerRepository = new StubPlayerRepository(sessionFactoryMock.Object) { Players = players };
 
             Expression<Func<Player, bool>> filterFunc = p => p.PlayerId > 4;
 
@@ -525,7 +525,7 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
 
             sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
 
-            var playerRepository = new PlayerRepository(sessionFactoryMock.Object) { Players = players };
+            var playerRepository = new StubPlayerRepository(sessionFactoryMock.Object) { Players = players };
 
             Expression<Func<Player, bool>> filterFunc = null;
 
@@ -546,7 +546,7 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
 
             sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
 
-            var playerRepository = new PlayerRepository(sessionFactoryMock.Object) { Players = players };
+            var playerRepository = new StubPlayerRepository(sessionFactoryMock.Object) { Players = players };
 
             // Act
             int recordsCount = playerRepository.GetRecordsCount();
@@ -565,7 +565,7 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
 
             sessionFactoryMock.Setup(s => s.OpenSession()).Returns(sessionMock.Object);
 
-            var playerRepository = new PlayerRepository(sessionFactoryMock.Object) { Players = players };
+            var playerRepository = new StubPlayerRepository(sessionFactoryMock.Object) { Players = players };
 
             Expression<Func<Player, bool>> funcFilter = p => p.PlayerId > 4;
 

@@ -2,7 +2,7 @@
 
 namespace TournamentWebApi.BLL.Interfaces
 {
-    public interface IServicesProvider
+    public interface ITournamentServiceProvider
     {
         IAccountService AccountService { get; }
         IMatchService MatchService { get; }

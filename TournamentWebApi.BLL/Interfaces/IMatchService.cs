@@ -23,28 +23,66 @@ namespace TournamentWebApi.BLL.Interfaces
         /// <summary>
         ///     Gets all matches from database
         /// </summary>
-        /// <returns>MathModel entities collection</returns>
+        /// <returns>MatchModel entities collection</returns>
         IEnumerable<MatchModel> GetAllMatches();
 
         /// <summary>
         ///     Gets specific match model by its Id
         /// </summary>
         /// <param name="matchId">MatchId</param>
-        /// <returns>MathModel entity</returns>
+        /// <returns>MatchModel entity</returns>
         MatchModel Get(int matchId);
 
         /// <summary>
         ///     Gets all matches filtered by filter condition
         /// </summary>
         /// <param name="filterCondition"></param>
-        /// <returns>MathModel entities collection filtered by filterCondition</returns>
+        /// <returns>MatchModel entities collection filtered by filterCondition</returns>
         IEnumerable<MatchModel> GetRange(Expression<Func<Match, bool>> filterCondition);
 
         /// <summary>
         ///     Generates matches for next round
         /// </summary>
-        /// <returns>MathModel entities collection</returns>
+        /// <returns>MatchModel entities collection</returns>
         IEnumerable<MatchModel> GenerateMatchesForNextRound();
+
+        /// <summary>
+        ///     Generates matches for next round
+        /// </summary>
+        /// <param name="players">Players taking part in tournament</param>
+        /// <param name="matches">List of previous matches in this tournament</param>
+        /// <returns>MatchModel entities collection</returns>
+        IEnumerable<MatchModel> GenerateMatchesForNextRound(IEnumerable<Player> players, IEnumerable<Match> matches);
+
+        /// <summary>
+        ///     Generates matches for next round
+        /// </summary>
+        /// <param name="players">Players taking part in tournament</param>
+        /// <param name="matches">List of previous matches in this tournament</param>
+        /// <returns>MatchModel entities collection</returns>
+        IEnumerable<MatchModel> GenerateMatchesForNextRound(IEnumerable<PlayerModel> players, IEnumerable<MatchModel> matches);
+
+        /// <summary>
+        ///     Generates matches for all games
+        /// </summary>
+        /// <returns>MatchModel entities collection</returns>
+        IEnumerable<MatchModel> GenerateMatches();
+
+        /// <summary>
+        ///     Generates matches for all games
+        /// </summary>
+        /// <param name="players">Players taking part in tournament</param>
+        /// <param name="matches">List of previous matches in this tournament</param>
+        /// <returns>MatchModel entities collection</returns>
+        IEnumerable<MatchModel> GenerateMatches(IEnumerable<Player> players, IEnumerable<Match> matches);
+
+        /// <summary>
+        ///     Generates matches for all games
+        /// </summary>
+        /// <param name="players">Players taking part in tournament</param>
+        /// <param name="matches">List of previous matches in this tournament</param>
+        /// <returns>MatchModel entities collection</returns>
+        IEnumerable<MatchModel> GenerateMatches(IEnumerable<PlayerModel> players, IEnumerable<MatchModel> matches);
 
         /// <summary>
         ///     Gets player score
@@ -65,5 +103,19 @@ namespace TournamentWebApi.BLL.Interfaces
         /// <param name="playerId"></param>
         /// <returns>MatchModel entities collection for the given player id</returns>
         IEnumerable<MatchModel> GetPlayerMatches(int playerId);
+
+        /// <summary>
+        ///     Gets rounds count
+        /// </summary>
+        /// <param name="playersCount">Count of players taking part in the tournament</param>
+        /// <returns></returns>
+        int GetTotalRoundsCount(int playersCount);
+
+        /// <summary>
+        ///     Gets matches with assigned players result randomly assigned
+        /// </summary>
+        /// <param name="roundMatches">List of matches in the last round</param>
+        /// <returns>MatchModel entities collection for the next tournament round. Players result are randomly assigned.</returns>
+        IEnumerable<MatchModel> AssignRandomResultsForGeneratedMatches(IEnumerable<MatchModel> roundMatches);
     }
 }

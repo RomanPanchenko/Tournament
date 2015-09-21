@@ -10,9 +10,9 @@ namespace TournamentWebApi.WEB.ApiControllers
 {
     public class ScoresController : ApiController
     {
-        private readonly IServicesProvider _servicesProvider;
+        private readonly ITournamentServiceProvider _servicesProvider;
 
-        public ScoresController(IServicesProvider servicesProvider)
+        public ScoresController(ITournamentServiceProvider servicesProvider)
         {
             _servicesProvider = servicesProvider;
         }

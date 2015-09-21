@@ -2,7 +2,7 @@
 {
     public static class SpecialPlayerIds
     {
-        public const int WinnerIdForGameWithUndefinedResult = -1;
-        public const int WinnerIdForDrawnGame = -2;
+        public const int WinnerIdForGameWithUndefinedResult = 0;
+        public const int WinnerIdForDrawnGame = -1;
     }
 }

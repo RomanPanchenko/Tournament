@@ -62,7 +62,7 @@
     <Compile Include="Interfaces\IMatchService.cs" />
     <Compile Include="Interfaces\IPlayerService.cs" />
     <Compile Include="Interfaces\IRoleService.cs" />
-    <Compile Include="Interfaces\IServicesProvider.cs" />
+    <Compile Include="Interfaces\ITournamentServiceProvider.cs" />
     <Compile Include="Models\AccountModel.cs" />
     <Compile Include="Models\MatchModel.cs" />
     <Compile Include="Models\PlayerModel.cs" />
@@ -74,7 +74,7 @@
     <Compile Include="Services\MatchService.cs" />
     <Compile Include="Services\PlayerService.cs" />
     <Compile Include="Services\RoleService.cs" />
-    <Compile Include="Services\ServicesProvider.cs" />
+    <Compile Include="Services\TournamentServiceProvider.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

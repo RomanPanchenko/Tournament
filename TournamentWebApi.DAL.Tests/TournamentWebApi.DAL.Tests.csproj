@@ -89,7 +89,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="AuxiliaryClasses\PlayerRepository.cs" />
+    <Compile Include="AuxiliaryClasses\StubPlayerRepository.cs" />
     <Compile Include="UnitTests\GenericRepositoryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

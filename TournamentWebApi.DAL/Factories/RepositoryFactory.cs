@@ -16,8 +16,8 @@ namespace TournamentWebApi.DAL.Factories
             _repositories = new Dictionary<Type, Lazy<object>>
             {
                 {typeof (Account), new Lazy<object>(() => new GenericRepository<Account>(sessionFactory))},
-                {typeof (Match), new Lazy<object>(() => new GenericRepository<Match>(sessionFactory))},
-                {typeof (Player), new Lazy<object>(() => new GenericRepository<Player>(sessionFactory))},
+                {typeof (Match), new Lazy<object>(() => new MatchRepository(sessionFactory))},
+                {typeof (Player), new Lazy<object>(() => new PlayerRepository(sessionFactory))},
                 {typeof (Role), new Lazy<object>(() => new GenericRepository<Role>(sessionFactory))}
             };
         }
