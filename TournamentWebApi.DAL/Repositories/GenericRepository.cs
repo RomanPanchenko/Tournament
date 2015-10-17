@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using NHibernate;
 using NHibernate.Linq;
 using TournamentWebApi.Core.Enums;
@@ -94,6 +95,11 @@ namespace TournamentWebApi.DAL.Repositories
             }
 
             return entities;
+        }
+
+        public async Task<IEnumerable<TEntity>> GetRangeAsync(Expression<Func<TEntity, bool>> filterCondition)
+        {
+            return await Task.Run(() => GetRange(filterCondition));
         }
 
         public virtual IEnumerable<TEntity> GetRange(

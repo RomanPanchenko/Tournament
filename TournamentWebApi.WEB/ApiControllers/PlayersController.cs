@@ -6,7 +6,7 @@ using TournamentWebApi.BLL.Interfaces;
 
 namespace TournamentWebApi.WEB.ApiControllers
 {
-    public class PlayersController : ApiController
+    public class PlayersController : BaseController
     {
         private readonly IPlayerService _playerService;
 

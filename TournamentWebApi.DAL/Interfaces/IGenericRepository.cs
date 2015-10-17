@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using TournamentWebApi.Core.Enums;
 
 namespace TournamentWebApi.DAL.Interfaces
@@ -50,6 +51,13 @@ namespace TournamentWebApi.DAL.Interfaces
         /// <param name="filterCondition"></param>
         /// <returns>List of filtered entities</returns>
         IEnumerable<TEntity> GetRange(Expression<Func<TEntity, bool>> filterCondition);
+
+        /// <summary>
+        ///     Gets all entities from database filtered by filter condition
+        /// </summary>
+        /// <param name="filterCondition"></param>
+        /// <returns>List of filtered entities</returns>
+        Task<IEnumerable<TEntity>> GetRangeAsync(Expression<Func<TEntity, bool>> filterCondition);
 
         /// <summary>
         ///     Gets all entities from database filtered by filter condition and sorted by sort condition

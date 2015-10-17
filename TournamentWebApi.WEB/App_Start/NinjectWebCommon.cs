@@ -17,7 +17,14 @@ namespace TournamentWebApi.WEB
 {
     public static class NinjectWebCommon
     {
-        private static readonly Bootstrapper bootstrapper = new Bootstrapper();
+        private static IKernel _kernel;
+
+        public static IKernel Kernel
+        {
+            get { return _kernel ?? (_kernel = new StandardKernel()); }
+        }
+
+        private static readonly Bootstrapper Bootstrapper = new Bootstrapper();
 
         /// <summary>
         /// Starts the application
@@ -26,7 +33,7 @@ namespace TournamentWebApi.WEB
         {
             DynamicModuleUtility.RegisterModule(typeof(OnePerRequestHttpModule));
             DynamicModuleUtility.RegisterModule(typeof(NinjectHttpModule));
-            bootstrapper.Initialize(CreateKernel);
+            Bootstrapper.Initialize(CreateKernel);
         }
 
         /// <summary>
@@ -34,7 +41,7 @@ namespace TournamentWebApi.WEB
         /// </summary>
         public static void Stop()
         {
-            bootstrapper.ShutDown();
+            Bootstrapper.ShutDown();
         }
 
         /// <summary>
@@ -43,22 +50,21 @@ namespace TournamentWebApi.WEB
         /// <returns>The created kernel.</returns>
         private static IKernel CreateKernel()
         {
-            var kernel = new StandardKernel();
             try
             {
-                kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
-                kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
+                Kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
+                Kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
 
-                RegisterServices(kernel);
+                RegisterServices();
 
                 // To allow Ninject resolves interfaces in constructors for Web Api Controllers
-                GlobalConfiguration.Configuration.DependencyResolver = new NinjectDependencyResolver(kernel);
+                GlobalConfiguration.Configuration.DependencyResolver = new NinjectDependencyResolver(Kernel);
 
-                return kernel;
+                return Kernel;
             }
             catch
             {
-                kernel.Dispose();
+                Kernel.Dispose();
                 throw;
             }
         }
@@ -66,15 +72,15 @@ namespace TournamentWebApi.WEB
         /// <summary>
         /// Load your modules or register your services here!
         /// </summary>
-        /// <param name="kernel">The kernel.</param>
-        private static void RegisterServices(IKernel kernel)
+        private static void RegisterServices()
         {
             var modules = new List<INinjectModule>
             {
                 new ResolverModule(),
+                new DependencyResolver.ResolverModule()
             };
 
-            kernel.Load(modules);
+            Kernel.Load(modules);
         }
     }
 }

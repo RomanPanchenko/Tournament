@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using TournamentWebApi.BLL.Models;
 using TournamentWebApi.DAL.Entities;
 
@@ -21,7 +22,7 @@ namespace TournamentWebApi.BLL.Interfaces
         /// <param name="login"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        AccountModel Get(string login, string password);
+        Task<AccountModel> Get(string login, string password);
 
         /// <summary>
         ///     Gets all accounts from database
@@ -34,7 +35,7 @@ namespace TournamentWebApi.BLL.Interfaces
         /// </summary>
         /// <param name="filterCondition"></param>
         /// <returns></returns>
-        IEnumerable<AccountModel> GetRange(Expression<Func<Account, bool>> filterCondition);
+        Task<IEnumerable<AccountModel>> GetRange(Expression<Func<Account, bool>> filterCondition);
 
 
     }

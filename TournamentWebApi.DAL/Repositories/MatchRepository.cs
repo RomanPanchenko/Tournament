@@ -10,7 +10,6 @@ namespace TournamentWebApi.DAL.Repositories
         public MatchRepository(ISessionFactory sessionFactory)
             : base(sessionFactory)
         {
-
         }
 
         protected override IQueryable<Match> All(ISession session)

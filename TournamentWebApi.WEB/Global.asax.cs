@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Cryptography;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
@@ -8,6 +7,7 @@ using System.Web.Routing;
 using System.Web.Security;
 using AutoMapper;
 using Newtonsoft.Json;
+using TournamentWebApi.WEB.DependencyResolver;
 using TournamentWebApi.WEB.Mappings;
 using TournamentWebApi.WEB.Security;
 
@@ -30,10 +30,11 @@ namespace TournamentWebApi.WEB
         protected void Application_PostAuthenticateRequest(Object sender, EventArgs e)
         {
             HttpCookie authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
-            if (authCookie != null)
+            if (authCookie != null && !string.IsNullOrEmpty(authCookie.Value))
             {
                 try
                 {
+
                     FormsAuthenticationTicket authTicket = FormsAuthentication.Decrypt(authCookie.Value);
 
                     if (authTicket != null)
@@ -51,7 +52,7 @@ namespace TournamentWebApi.WEB
                         HttpContext.Current.User = newUser;
                     }
                 }
-                catch (CryptographicException ex)
+                catch (Exception ex)
                 {
                     FormsAuthentication.SignOut();
                 }

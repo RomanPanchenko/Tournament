@@ -68,13 +68,15 @@ namespace TournamentWebApi.WEB.Mappings
                     : z.Player2.Winner
                         ? z.Player2
                         : new PlayerModel { PlayerId = SpecialPlayerIds.WinnerIdForDrawnGame }))
-                .ForMember(x => x.MatchId, y => y.Ignore())
-                .ForMember(x => x.Result, y => y.Ignore());
+                .ForMember(x => x.MatchId, y => y.Ignore());
         }
 
         private static void InitAccountMapping()
         {
-            Mapper.CreateMap<AccountModel, Account>().ReverseMap();
+            Mapper.CreateMap<AccountModel, Account>();
+                //.ForMember(x => x.Roles, y => y.Ignore());
+
+            Mapper.CreateMap<Account, AccountModel>();
         }
 
         private static void InitRoleMapping()

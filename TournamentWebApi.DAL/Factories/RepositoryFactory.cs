@@ -1,6 +1,6 @@
-﻿using NHibernate;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using NHibernate;
 using TournamentWebApi.DAL.Entities;
 using TournamentWebApi.DAL.Interfaces;
 using TournamentWebApi.DAL.Repositories;
@@ -15,10 +15,10 @@ namespace TournamentWebApi.DAL.Factories
         {
             _repositories = new Dictionary<Type, Lazy<object>>
             {
-                {typeof (Account), new Lazy<object>(() => new GenericRepository<Account>(sessionFactory))},
+                {typeof (Account), new Lazy<object>(() => new AccountRepository(sessionFactory))},
                 {typeof (Match), new Lazy<object>(() => new MatchRepository(sessionFactory))},
                 {typeof (Player), new Lazy<object>(() => new PlayerRepository(sessionFactory))},
-                {typeof (Role), new Lazy<object>(() => new GenericRepository<Role>(sessionFactory))}
+                {typeof (Role), new Lazy<object>(() => new RoleRepository(sessionFactory))}
             };
         }
 

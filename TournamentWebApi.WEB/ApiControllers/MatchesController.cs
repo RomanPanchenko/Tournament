@@ -6,7 +6,7 @@ using TournamentWebApi.BLL.Models;
 
 namespace TournamentWebApi.WEB.ApiControllers
 {
-    public class MatchesController : ApiController
+    public class MatchesController : BaseController
     {
         private readonly ITournamentServiceProvider _servicesProvider;
 

@@ -8,7 +8,7 @@ using TournamentWebApi.BLL.Models;
 
 namespace TournamentWebApi.WEB.ApiControllers
 {
-    public class ScoresController : ApiController
+    public class ScoresController : BaseController
     {
         private readonly ITournamentServiceProvider _servicesProvider;
 

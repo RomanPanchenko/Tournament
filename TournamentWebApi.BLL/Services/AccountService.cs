@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
@@ -26,10 +27,11 @@ namespace TournamentWebApi.BLL.Services
             return accountModel;
         }
 
-        public AccountModel Get(string login, string password)
+        public async Task<AccountModel> Get(string login, string password)
         {
-            IEnumerable<Account> accounts = _accountRepository.GetRange(p =>
-                p.Login.Equals(login, StringComparison.OrdinalIgnoreCase) && p.Password.Equals(password));
+            //IEnumerable<Account> accounts = _accountRepository.GetRange(p => p.Login.Equals(login, StringComparison.OrdinalIgnoreCase) && p.Password.Equals(password));
+            // Cannot use String.Equals because of error. Seems like LINQ cannot handle method invocation, like Equals. But somehow it invokes ToLower()...
+            IEnumerable<Account> accounts = await _accountRepository.GetRangeAsync(p => p.Login.ToLower() == login.ToLower() && p.Password == password);
 
             var accountModels = Mapper.Map<IEnumerable<AccountModel>>(accounts);
             AccountModel accountModel = accountModels.FirstOrDefault();
@@ -44,9 +46,9 @@ namespace TournamentWebApi.BLL.Services
             return accountModels;
         }
 
-        public IEnumerable<AccountModel> GetRange(Expression<Func<Account, bool>> filterCondition)
+        public async Task<IEnumerable<AccountModel>> GetRange(Expression<Func<Account, bool>> filterCondition)
         {
-            IEnumerable<Account> accounts = _accountRepository.GetRange(filterCondition);
+            IEnumerable<Account> accounts = await _accountRepository.GetRangeAsync(filterCondition);
             var accountModels = Mapper.Map<IEnumerable<AccountModel>>(accounts);
             return accountModels;
         }

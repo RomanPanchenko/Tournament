@@ -1,24 +1,27 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
-using System.Web.Security;
-using Newtonsoft.Json;
-using TournamentWebApi.BLL.Interfaces;
+using Ninject;
 using TournamentWebApi.BLL.Models;
+using TournamentWebApi.WEB.Interfaces;
 using TournamentWebApi.WEB.Models;
 
 namespace TournamentWebApi.WEB.ApiControllers
 {
-    public class AccountController : ApiController
+    public class AccountController : BaseController
     {
-        private readonly IAccountService _accountService;
+        private readonly IAuthenticationService _authenticationService;
 
-        public AccountController(IAccountService accountService)
+        public AccountController()
         {
-            _accountService = accountService;
+            _authenticationService = NinjectWebCommon.Kernel.Get<IAuthenticationService>();
+        }
+
+        public AccountController(IAuthenticationService authenticationService)
+        {
+            _authenticationService = authenticationService;
         }
 
         // POST api/<controller>
@@ -26,38 +29,24 @@ namespace TournamentWebApi.WEB.ApiControllers
         [Route("api/account")]
         public async Task<HttpResponseMessage> Post(LoginModel loginModel)
         {
-            return await Task.Run(() =>
+            HttpResponse response = HttpContext.Current.Response;
+            if (ModelState.IsValid)
             {
-                if (ModelState.IsValid)
-                {
-                    LoginUser(loginModel);
-                    return Request.CreateResponse(HttpStatusCode.OK);
-                }
+                AccountModel accountModel = await _authenticationService.Login(response, loginModel);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
 
-                return Request.CreateResponse(HttpStatusCode.Forbidden);
-            });
+            return Request.CreateResponse(HttpStatusCode.Forbidden);
         }
 
-        private void LoginUser(LoginModel loginModel)
+        // POST api/<controller>
+        [HttpDelete]
+        [Route("api/account")]
+        public HttpResponseMessage Delete()
         {
-            AccountModel accountModel = _accountService.Get(loginModel.Login, loginModel.Password);
-            if (accountModel != null)
-            {
-                string userData = JsonConvert.SerializeObject(accountModel);
-                var authTicket = new FormsAuthenticationTicket(
-                    1,
-                    accountModel.Login,
-                    DateTime.Now,
-                    DateTime.Now.AddMinutes(15),
-                    false, // pass here true, if you want to implement remember me functionality
-                    userData);
-
-                string encryptedTicket = FormsAuthentication.Encrypt(authTicket);
-                var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
-
-                HttpContent.Current.Response.Cookies.Add(cookie);
-
-            }
+            HttpResponse response = HttpContext.Current.Response;
+            _authenticationService.Logout(response);
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
     }
 }
