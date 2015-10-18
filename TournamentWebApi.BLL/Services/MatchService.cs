@@ -118,7 +118,7 @@ namespace TournamentWebApi.BLL.Services
         public ScoreModel GetPlayerScore(int playerId)
         {
             IEnumerable<ScoreModel> scoreModels = GetScoreForAllPlayers();
-            return scoreModels.First(p => p.PlayerId == playerId);
+            return scoreModels.FirstOrDefault(p => p.PlayerId == playerId);
         }
 
         public IEnumerable<ScoreModel> GetScoreForAllPlayers()
