@@ -144,7 +144,7 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApiControllers\AccountController.cs" />
+    <Compile Include="ApiControllers\AuthenticationController.cs" />
     <Compile Include="ApiControllers\BaseController.cs" />
     <Compile Include="ApiControllers\MatchesController.cs" />
     <Compile Include="ApiControllers\ScoresController.cs" />

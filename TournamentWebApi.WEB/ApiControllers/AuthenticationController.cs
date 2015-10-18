@@ -12,23 +12,23 @@ using TournamentWebApi.WEB.Models;
 namespace TournamentWebApi.WEB.ApiControllers
 {
     [ApiExceptionLoggingFilter]
-    public class AccountController : BaseController
+    public class AuthenticationController : BaseController
     {
         private readonly IAuthenticationService _authenticationService;
 
-        public AccountController()
+        public AuthenticationController()
         {
             _authenticationService = NinjectWebCommon.Kernel.Get<IAuthenticationService>();
         }
 
-        public AccountController(IAuthenticationService authenticationService)
+        public AuthenticationController(IAuthenticationService authenticationService)
         {
             _authenticationService = authenticationService;
         }
 
         // POST api/<controller>
         [HttpPost]
-        [Route("api/account/login")]
+        [Route("api/authentication")]
         public async Task<HttpResponseMessage> Post(LoginModel loginModel)
         {
             HttpResponse response = HttpContext.Current.Response;
@@ -42,9 +42,9 @@ namespace TournamentWebApi.WEB.ApiControllers
         }
 
         // POST api/<controller>
-        [HttpGet]
-        [Route("api/account/logout")]
-        public HttpResponseMessage Get()
+        [HttpDelete]
+        [Route("api/authentication")]
+        public HttpResponseMessage Delete()
         {
             HttpResponse response = HttpContext.Current.Response;
             _authenticationService.Logout(response);
