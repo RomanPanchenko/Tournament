@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using TournamentWebApi.BLL.Interfaces;
@@ -22,8 +23,14 @@ namespace TournamentWebApi.WEB.ApiControllers
         [CustomApiAuthorize(Roles = "Admin, Manager")]
         public HttpResponseMessage Get()
         {
-            var players = _playerService.GetAllPlayers();
-            return Request.CreateResponse(HttpStatusCode.OK, players);
+            var httpStatusCode = HttpStatusCode.OK;
+            var players = _playerService.GetAllPlayers().ToList();
+            if (!players.Any())
+            {
+                httpStatusCode = HttpStatusCode.NotFound;
+            }
+
+            return Request.CreateResponse(httpStatusCode, players);
         }
 
         // GET api/<controller>/5
@@ -31,8 +38,14 @@ namespace TournamentWebApi.WEB.ApiControllers
         [CustomApiAuthorize(Roles = "Admin, Manager")]
         public HttpResponseMessage Get(int id)
         {
+            var httpStatusCode = HttpStatusCode.OK;
             var playerModel = _playerService.Get(id);
-            return Request.CreateResponse(HttpStatusCode.OK, playerModel);
+            if (playerModel == null)
+            {
+                httpStatusCode = HttpStatusCode.NotFound;
+            }
+
+            return Request.CreateResponse(httpStatusCode, playerModel);
         }
     }
 }

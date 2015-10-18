@@ -16,11 +16,6 @@ namespace TournamentWebApi.WEB.ApiControllers
     {
         private readonly IAuthenticationService _authenticationService;
 
-        public AuthenticationController()
-        {
-            _authenticationService = NinjectWebCommon.Kernel.Get<IAuthenticationService>();
-        }
-
         public AuthenticationController(IAuthenticationService authenticationService)
         {
             _authenticationService = authenticationService;

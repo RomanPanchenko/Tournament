@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -24,8 +25,14 @@ namespace TournamentWebApi.WEB.ApiControllers
         [Route("api/players/score")]
         public HttpResponseMessage Get()
         {
-            IEnumerable<ScoreModel> scores = _servicesProvider.MatchService.GetScoreForAllPlayers();
-            return Request.CreateResponse(HttpStatusCode.OK, scores);
+            var httpStatusCode = HttpStatusCode.OK;
+            List<ScoreModel> scores = _servicesProvider.MatchService.GetScoreForAllPlayers().ToList();
+            if (!scores.Any())
+            {
+                httpStatusCode = HttpStatusCode.NotFound;
+            }
+
+            return Request.CreateResponse(httpStatusCode, scores);
         }
 
         // GET api/players/5/score
@@ -33,8 +40,14 @@ namespace TournamentWebApi.WEB.ApiControllers
         [HttpGet]
         public HttpResponseMessage Get(int id)
         {
+            var httpStatusCode = HttpStatusCode.OK;
             ScoreModel playerModel = _servicesProvider.MatchService.GetPlayerScore(id);
-            return Request.CreateResponse(HttpStatusCode.OK, playerModel);
+            if (playerModel == null)
+            {
+                httpStatusCode = HttpStatusCode.NotFound;
+            }
+
+            return Request.CreateResponse(httpStatusCode, playerModel);
         }
     }
 }

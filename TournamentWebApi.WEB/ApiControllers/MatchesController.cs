@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Web.Http;
 using TournamentWebApi.BLL.Interfaces;
 using TournamentWebApi.BLL.Models;
@@ -19,10 +22,16 @@ namespace TournamentWebApi.WEB.ApiControllers
         // GET api/<controller>/5
         [Route("api/players/{id:int}/matches")]
         [HttpGet]
-        public IEnumerable<MatchModel> Get(int id)
+        public HttpResponseMessage Get(int id)
         {
-            IEnumerable<MatchModel> matches = _servicesProvider.MatchService.GetPlayerMatches(id);
-            return matches;
+            var httpStatusCode = HttpStatusCode.OK;
+            List<MatchModel> matches = _servicesProvider.MatchService.GetPlayerMatches(id).ToList();
+            if (!matches.Any())
+            {
+                httpStatusCode = HttpStatusCode.NotFound;
+            }
+
+            return Request.CreateResponse(httpStatusCode, matches);
         }
     }
 }
