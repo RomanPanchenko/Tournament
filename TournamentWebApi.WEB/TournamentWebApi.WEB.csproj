@@ -156,10 +156,14 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="ApiControllers\PlayersController.cs" />
     <Compile Include="DependencyResolver\ResolverModule.cs" />
+    <Compile Include="Filters\ApiExceptionLoggingFilter.cs" />
+    <Compile Include="Filters\ExceptionLoggingFilter.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\IAuthenticationService.cs" />
+    <Compile Include="Interfaces\ITournamentWebApiLogger.cs" />
+    <Compile Include="Logging\TournamentWebApiLogger.cs" />
     <Compile Include="Mappings\Mapping.cs" />
     <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

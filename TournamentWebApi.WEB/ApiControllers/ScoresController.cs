@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web.Http;
 using TournamentWebApi.BLL.Interfaces;
 using TournamentWebApi.BLL.Models;
+using TournamentWebApi.WEB.Filters;
 
 namespace TournamentWebApi.WEB.ApiControllers
 {
+    [ApiExceptionLoggingFilter]
     public class ScoresController : BaseController
     {
         private readonly ITournamentServiceProvider _servicesProvider;
@@ -21,25 +22,19 @@ namespace TournamentWebApi.WEB.ApiControllers
         // GET api/scores
         [HttpGet]
         [Route("api/players/score")]
-        public async Task<HttpResponseMessage> Get()
+        public HttpResponseMessage Get()
         {
-            return await Task.Run(() =>
-            {
-                IEnumerable<ScoreModel> scores = _servicesProvider.MatchService.GetScoreForAllPlayers();
-                return Request.CreateResponse(HttpStatusCode.OK, scores);
-            });
+            IEnumerable<ScoreModel> scores = _servicesProvider.MatchService.GetScoreForAllPlayers();
+            return Request.CreateResponse(HttpStatusCode.OK, scores);
         }
 
         // GET api/players/5/score
         [Route("api/players/{id:int}/score")]
         [HttpGet]
-        public async Task<HttpResponseMessage> Get(int id)
+        public HttpResponseMessage Get(int id)
         {
-            return await Task.Run(() =>
-            {
-                ScoreModel playerModel = _servicesProvider.MatchService.GetPlayerScore(id);
-                return Request.CreateResponse(HttpStatusCode.OK, playerModel);
-            });
+            ScoreModel playerModel = _servicesProvider.MatchService.GetPlayerScore(id);
+            return Request.CreateResponse(HttpStatusCode.OK, playerModel);
         }
     }
 }

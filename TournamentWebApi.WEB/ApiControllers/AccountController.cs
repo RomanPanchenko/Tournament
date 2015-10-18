@@ -5,11 +5,13 @@ using System.Web;
 using System.Web.Http;
 using Ninject;
 using TournamentWebApi.BLL.Models;
+using TournamentWebApi.WEB.Filters;
 using TournamentWebApi.WEB.Interfaces;
 using TournamentWebApi.WEB.Models;
 
 namespace TournamentWebApi.WEB.ApiControllers
 {
+    [ApiExceptionLoggingFilter]
     public class AccountController : BaseController
     {
         private readonly IAuthenticationService _authenticationService;
@@ -26,7 +28,7 @@ namespace TournamentWebApi.WEB.ApiControllers
 
         // POST api/<controller>
         [HttpPost]
-        [Route("api/account")]
+        [Route("api/account/login")]
         public async Task<HttpResponseMessage> Post(LoginModel loginModel)
         {
             HttpResponse response = HttpContext.Current.Response;
@@ -40,9 +42,9 @@ namespace TournamentWebApi.WEB.ApiControllers
         }
 
         // POST api/<controller>
-        [HttpDelete]
-        [Route("api/account")]
-        public HttpResponseMessage Delete()
+        [HttpGet]
+        [Route("api/account/logout")]
+        public HttpResponseMessage Get()
         {
             HttpResponse response = HttpContext.Current.Response;
             _authenticationService.Logout(response);

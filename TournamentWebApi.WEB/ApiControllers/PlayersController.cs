@@ -1,11 +1,13 @@
 ﻿using System.Net;
 using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web.Http;
 using TournamentWebApi.BLL.Interfaces;
+using TournamentWebApi.WEB.Filters;
+using TournamentWebApi.WEB.Security;
 
 namespace TournamentWebApi.WEB.ApiControllers
 {
+    [ApiExceptionLoggingFilter]
     public class PlayersController : BaseController
     {
         private readonly IPlayerService _playerService;
@@ -17,24 +19,20 @@ namespace TournamentWebApi.WEB.ApiControllers
 
         // GET api/<controller>
         [HttpGet]
-        public async Task<HttpResponseMessage> Get()
+        [CustomApiAuthorize(Roles = "Admin, Manager")]
+        public HttpResponseMessage Get()
         {
-            return await Task.Run(() =>
-            {
-                var players = _playerService.GetAllPlayers();
-                return Request.CreateResponse(HttpStatusCode.OK, players);
-            });
+            var players = _playerService.GetAllPlayers();
+            return Request.CreateResponse(HttpStatusCode.OK, players);
         }
 
         // GET api/<controller>/5
         [HttpGet]
-        public async Task<HttpResponseMessage> Get(int id)
+        [CustomApiAuthorize(Roles = "Admin, Manager")]
+        public HttpResponseMessage Get(int id)
         {
-            return await Task.Run(() =>
-            {
-                var playerModel = _playerService.Get(id);
-                return Request.CreateResponse(HttpStatusCode.OK, playerModel);
-            });
+            var playerModel = _playerService.Get(id);
+            return Request.CreateResponse(HttpStatusCode.OK, playerModel);
         }
     }
 }

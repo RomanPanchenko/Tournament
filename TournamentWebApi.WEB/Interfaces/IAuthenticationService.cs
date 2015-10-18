@@ -2,6 +2,7 @@
 using System.Web;
 using TournamentWebApi.BLL.Models;
 using TournamentWebApi.WEB.Models;
+using TournamentWebApi.WEB.Security;
 
 namespace TournamentWebApi.WEB.Interfaces
 {
@@ -9,5 +10,6 @@ namespace TournamentWebApi.WEB.Interfaces
     {
         Task<AccountModel> Login(HttpResponse httpResponse, LoginModel loginModel);
         void Logout(HttpResponse httpResponse);
+        void ProlongateUserSession(HttpResponse httpResponse, CustomPrincipalSerializeModel principalModel);
     }
 }

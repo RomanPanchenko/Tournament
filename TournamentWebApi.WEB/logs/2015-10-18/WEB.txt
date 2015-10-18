@@ -1,0 +1,68 @@
+2015-10-18 19:06:28.6720|ERROR|TournamentWebApi.WEB.Logging.TournamentWebApiLogger|Error message: Object reference not set to an instance of an object..
+
+2015-10-18 19:32:29.3080|ERROR|TournamentWebApi.WEB.Logging.TournamentWebApiLogger|Controller: TournamentWebApi.WEB.ApiControllers.PlayersController		Method: GET
+URI: http://localhost:65280/api/players/1
+Error message: Session is closed!
+Object name: 'ISession'.
+Stack trace:    at NHibernate.Impl.AbstractSessionImpl.ErrorIfClosed()
+   at NHibernate.Impl.AbstractSessionImpl.CheckAndUpdateSessionStatus()
+   at NHibernate.Impl.SessionImpl.FireLoad(LoadEvent event, LoadType loadType)
+   at NHibernate.Impl.SessionImpl.Get(String entityName, Object id)
+   at NHibernate.Impl.SessionImpl.Get(Type entityClass, Object id)
+   at NHibernate.Impl.SessionImpl.Get[T](Object id)
+   at TournamentWebApi.DAL.Repositories.GenericRepository`1.Get(Int32 id) in c:\Users\roman.panchenko\Documents\Visual Studio 2013\Projects\TournamentWebApi\TournamentWebApi.DAL\Repositories\GenericRepository.cs:line 58
+   at TournamentWebApi.BLL.Services.PlayerService.Get(Int32 playerId) in c:\Users\roman.panchenko\Documents\Visual Studio 2013\Projects\TournamentWebApi\TournamentWebApi.BLL\Services\PlayerService.cs:line 21
+   at TournamentWebApi.WEB.ApiControllers.PlayersController.Get(Int32 id) in c:\Users\roman.panchenko\Documents\Visual Studio 2013\Projects\TournamentWebApi\TournamentWebApi.WEB\ApiControllers\PlayersController.cs:line 34
+   at lambda_method(Closure , Object , Object[] )
+   at System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ActionExecutor.<>c__DisplayClass10.<GetExecutor>b__9(Object instance, Object[] methodParameters)
+   at System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ActionExecutor.Execute(Object instance, Object[] arguments)
+   at System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ExecuteAsync(HttpControllerContext controllerContext, IDictionary`2 arguments, CancellationToken cancellationToken)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at System.Web.Http.Controllers.ApiControllerActionInvoker.<InvokeUsingResultConverterAsync>d__8.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at System.Web.Http.Controllers.ActionFilterResult.<ExecuteAsync>d__2.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at System.Web.Http.ApiController.<InvokeActionWithExceptionFilters>d__1.MoveNext()
+
+2015-10-18 19:32:29.3180|ERROR|TournamentWebApi.WEB.Logging.TournamentWebApiLogger|Controller: TournamentWebApi.WEB.ApiControllers.PlayersController		Method: GET
+URI: http://localhost:65280/api/players/1
+Error message: Session is closed!
+Object name: 'ISession'.
+Stack trace:    at NHibernate.Impl.AbstractSessionImpl.ErrorIfClosed()
+   at NHibernate.Impl.AbstractSessionImpl.CheckAndUpdateSessionStatus()
+   at NHibernate.Impl.SessionImpl.FireLoad(LoadEvent event, LoadType loadType)
+   at NHibernate.Impl.SessionImpl.Get(String entityName, Object id)
+   at NHibernate.Impl.SessionImpl.Get(Type entityClass, Object id)
+   at NHibernate.Impl.SessionImpl.Get[T](Object id)
+   at TournamentWebApi.DAL.Repositories.GenericRepository`1.Get(Int32 id) in c:\Users\roman.panchenko\Documents\Visual Studio 2013\Projects\TournamentWebApi\TournamentWebApi.DAL\Repositories\GenericRepository.cs:line 58
+   at TournamentWebApi.BLL.Services.PlayerService.Get(Int32 playerId) in c:\Users\roman.panchenko\Documents\Visual Studio 2013\Projects\TournamentWebApi\TournamentWebApi.BLL\Services\PlayerService.cs:line 21
+   at TournamentWebApi.WEB.ApiControllers.PlayersController.Get(Int32 id) in c:\Users\roman.panchenko\Documents\Visual Studio 2013\Projects\TournamentWebApi\TournamentWebApi.WEB\ApiControllers\PlayersController.cs:line 34
+   at lambda_method(Closure , Object , Object[] )
+   at System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ActionExecutor.<>c__DisplayClass10.<GetExecutor>b__9(Object instance, Object[] methodParameters)
+   at System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ActionExecutor.Execute(Object instance, Object[] arguments)
+   at System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ExecuteAsync(HttpControllerContext controllerContext, IDictionary`2 arguments, CancellationToken cancellationToken)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at System.Web.Http.Controllers.ApiControllerActionInvoker.<InvokeUsingResultConverterAsync>d__8.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at System.Web.Http.Controllers.ActionFilterResult.<ExecuteAsync>d__2.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at System.Web.Http.ApiController.<InvokeActionWithExceptionFilters>d__1.MoveNext()
+

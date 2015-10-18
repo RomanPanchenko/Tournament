@@ -25,32 +25,16 @@ namespace TournamentWebApi.WEB.Security
             AccountModel accountModel = await _accountService.Get(loginModel.Login, loginModel.Password);
             if (accountModel != null)
             {
-                var principal = new CustomPrincipalSerializeModel
+                var principalModel = new CustomPrincipalSerializeModel
                 {
                     FirstName = accountModel.FirstName,
                     LastName = accountModel.LastName,
                     UserId = accountModel.AccountId,
-                    Roles = accountModel.Roles.Select(role => role.Name).ToArray()
+                    Roles = accountModel.Roles.Select(role => role.Name).ToArray(),
+                    Login = accountModel.Login
                 };
 
-                string userData = JsonConvert.SerializeObject(principal);
-                var expirationTime = DateTime.Now.AddMinutes(15);
-
-                var authTicket = new FormsAuthenticationTicket(
-                    1,
-                    accountModel.Login,
-                    DateTime.Now,
-                    expirationTime,
-                    false, // pass here true, if you want to implement remember me functionality
-                    userData);
-
-                string encryptedTicket = FormsAuthentication.Encrypt(authTicket);
-                var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket)
-                {
-                    Expires = expirationTime
-                };
-
-                httpResponse.Cookies.Add(cookie);
+                ProlongateUserSession(httpResponse, principalModel);
             }
 
             return accountModel;
@@ -63,7 +47,29 @@ namespace TournamentWebApi.WEB.Security
             {
                 authCookie.Expires = DateTime.Now.AddDays(-1);
                 authCookie.Value = null;
+                httpResponse.Cookies.Remove(FormsAuthentication.FormsCookieName);
+                httpResponse.SetCookie(authCookie);
             }
+        }
+
+        public void ProlongateUserSession(HttpResponse httpResponse, CustomPrincipalSerializeModel principalModel)
+        {
+            string userData = JsonConvert.SerializeObject(principalModel);
+            var expirationTime = DateTime.Now.AddMinutes(15);
+
+            var authTicket = new FormsAuthenticationTicket(
+                1,
+                principalModel.Login,
+                DateTime.Now,
+                expirationTime,
+                false, // pass here true, if you want to implement remember me functionality
+                userData);
+
+            string encryptedTicket = FormsAuthentication.Encrypt(authTicket);
+            var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
+
+            httpResponse.Cookies.Remove(FormsAuthentication.FormsCookieName);
+            httpResponse.SetCookie(cookie);
         }
     }
 }

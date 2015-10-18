@@ -7,7 +7,9 @@ using System.Web.Routing;
 using System.Web.Security;
 using AutoMapper;
 using Newtonsoft.Json;
+using Ninject;
 using TournamentWebApi.WEB.DependencyResolver;
+using TournamentWebApi.WEB.Interfaces;
 using TournamentWebApi.WEB.Mappings;
 using TournamentWebApi.WEB.Security;
 
@@ -34,22 +36,27 @@ namespace TournamentWebApi.WEB
             {
                 try
                 {
-
                     FormsAuthenticationTicket authTicket = FormsAuthentication.Decrypt(authCookie.Value);
 
                     if (authTicket != null)
                     {
-                        var serializeModel = JsonConvert.DeserializeObject<CustomPrincipalSerializeModel>(authTicket.UserData);
-
-                        var newUser = new CustomPrincipal(authTicket.Name)
+                        if (!authTicket.Expired)
                         {
-                            UserId = serializeModel.UserId,
-                            FirstName = serializeModel.FirstName,
-                            LastName = serializeModel.LastName,
-                            Roles = serializeModel.Roles
-                        };
+                            var principalModel = JsonConvert.DeserializeObject<CustomPrincipalSerializeModel>(authTicket.UserData);
 
-                        HttpContext.Current.User = newUser;
+                            var newUser = new CustomPrincipal(authTicket.Name)
+                            {
+                                UserId = principalModel.UserId,
+                                FirstName = principalModel.FirstName,
+                                LastName = principalModel.LastName,
+                                Roles = principalModel.Roles
+                            };
+
+                            HttpContext.Current.User = newUser;
+
+                            var authenticationService = NinjectWebCommon.Kernel.Get<IAuthenticationService>();
+                            authenticationService.ProlongateUserSession(HttpContext.Current.Response, principalModel);
+                        }
                     }
                 }
                 catch (Exception ex)
