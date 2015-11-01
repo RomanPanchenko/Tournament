@@ -4,6 +4,8 @@ using NHibernate.Cfg;
 using Ninject;
 using Ninject.Modules;
 using TournamentWebApi.BLL.Generators;
+using TournamentWebApi.BLL.Generators.Helpers;
+using TournamentWebApi.BLL.Generators.Interfaces;
 using TournamentWebApi.BLL.Interfaces;
 using TournamentWebApi.BLL.Services;
 using TournamentWebApi.DAL.Entities;
@@ -18,6 +20,9 @@ namespace TournamentWebApi.DepencyResolver.Modules
     {
         public override void Load()
         {
+            Bind<IPlayersHelper>().To<PlayersHelper>();
+            Bind<IMatchesHelper>().To<MatchesHelper>();
+
             Bind<ISessionFactory>().ToMethod<ISessionFactory>(context =>
             {
                 var configuration = new Configuration();
