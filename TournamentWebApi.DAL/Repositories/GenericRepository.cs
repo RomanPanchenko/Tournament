@@ -49,7 +49,7 @@ namespace TournamentWebApi.DAL.Repositories
             }
         }
 
-        public virtual TEntity Get(int id)
+        public virtual TEntity GetById(int id)
         {
             TEntity entity;
 
@@ -189,7 +189,7 @@ namespace TournamentWebApi.DAL.Repositories
             {
                 using (ITransaction transaction = session.BeginTransaction(IsolationLevel.ReadCommitted))
                 {
-                    TEntity entity = Get(id);
+                    TEntity entity = GetById(id);
                     session.Delete(entity);
                     transaction.Commit();
                 }

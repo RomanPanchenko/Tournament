@@ -9,7 +9,7 @@ namespace TournamentWebApi.BLL.Generators.Helpers
 {
     public class PlayersHelper : IPlayersHelper
     {
-        public bool PlayersCanPlayTogether(PlayerModel player1, PlayerModel player2, List<MatchModel> previousMatches)
+        public bool PlayersCanPlayTogether(PlayerModel player1, PlayerModel player2, IList<MatchModel> previousMatches)
         {
             // Players can play together if they haven't played together yet and
             // each of them didn't play with the same color more then 2 times.
@@ -34,24 +34,12 @@ namespace TournamentWebApi.BLL.Generators.Helpers
 
         public bool PlayerCanPlayWithDefinedColor(PlayerModel player, ChessColor color, IEnumerable<MatchModel> previousMatches)
         {
-            bool result;
-
-            List<ChessColor> colors = GetChessColorsForPlayedMatches(player, previousMatches);
-
-            if (colors.Count > 1)
-            {
-                colors.Reverse();
-                result = !(colors[0] == color && colors[1] == color);
-            }
-            else
-            {
-                result = true;
-            }
-
-            return result;
+            IList<ChessColor> colors = GetChessColorsForPlayedMatches(player, previousMatches);
+            int last = colors.Count - 1;
+            return last <= 0 || !(colors[last] == color && colors[last - 1] == color);
         }
 
-        public IEnumerable<PlayerModel> GetPlayersWithCalculatedRating(List<PlayerModel> players, List<MatchModel> previousMatches)
+        public IEnumerable<PlayerModel> GetPlayersWithCalculatedRating(IList<PlayerModel> players, IList<MatchModel> previousMatches)
         {
             foreach (PlayerModel player in players)
             {
@@ -61,28 +49,6 @@ namespace TournamentWebApi.BLL.Generators.Helpers
             }
 
             return players;
-        }
-
-        private List<ChessColor> GetChessColorsForPlayedMatches(PlayerModel player, IEnumerable<MatchModel> previousMatches)
-        {
-            var colors = new List<ChessColor>();
-            var matches = previousMatches.Where(p => p.Player1.PlayerId == player.PlayerId || p.Player2.PlayerId == player.PlayerId);
-            foreach (MatchModel matchModel in matches)
-            {
-                if ((matchModel.Player1.PlayerId == player.PlayerId && matchModel.Player1PlaysWhite) ||
-                    (matchModel.Player2.PlayerId == player.PlayerId && !matchModel.Player1PlaysWhite))
-                {
-                    colors.Add(ChessColor.White);
-                }
-
-                if ((matchModel.Player1.PlayerId == player.PlayerId && !matchModel.Player1PlaysWhite) ||
-                    (matchModel.Player2.PlayerId == player.PlayerId && matchModel.Player1PlaysWhite))
-                {
-                    colors.Add(ChessColor.Black);
-                }
-            }
-
-            return colors;
         }
 
         private bool PlayersAlreadyPlayedTogether(PlayerModel player1, PlayerModel player2, IEnumerable<MatchModel> previousMatches)
@@ -105,6 +71,30 @@ namespace TournamentWebApi.BLL.Generators.Helpers
             }
 
             return rate;
+        }
+
+        private IList<ChessColor> GetChessColorsForPlayedMatches(PlayerModel player, IEnumerable<MatchModel> previousMatches)
+        {
+            var colors = new List<ChessColor>();
+            IEnumerable<MatchModel> matches = previousMatches
+                .Where(p => p.Player1.PlayerId == player.PlayerId || p.Player2.PlayerId == player.PlayerId);
+
+            foreach (MatchModel matchModel in matches)
+            {
+                if ((matchModel.Player1.PlayerId == player.PlayerId && matchModel.Player1PlaysWhite) ||
+                    (matchModel.Player2.PlayerId == player.PlayerId && !matchModel.Player1PlaysWhite))
+                {
+                    colors.Add(ChessColor.White);
+                }
+
+                if ((matchModel.Player1.PlayerId == player.PlayerId && !matchModel.Player1PlaysWhite) ||
+                    (matchModel.Player2.PlayerId == player.PlayerId && matchModel.Player1PlaysWhite))
+                {
+                    colors.Add(ChessColor.Black);
+                }
+            }
+
+            return colors;
         }
     }
 }

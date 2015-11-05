@@ -50,7 +50,7 @@ namespace TournamentWebApi.BLL.Services
 
         public MatchModel Get(int matchId)
         {
-            Match match = _unitOfWork.MatchRepository.Get(matchId);
+            Match match = _unitOfWork.MatchRepository.GetById(matchId);
             var matchModel = Mapper.Map<MatchModel>(match);
             return matchModel;
         }
@@ -58,23 +58,25 @@ namespace TournamentWebApi.BLL.Services
         public IEnumerable<MatchModel> GenerateMatchesForNextRound()
         {
             IEnumerable<Player> players = _unitOfWork.PlayerRepository.GetAll();
-            var existingPlayers = Mapper.Map<IEnumerable<PlayerModel>>(players);
-
+            var existingPlayers = Mapper.Map<IEnumerable<PlayerModel>>(players).ToList();
             IEnumerable<Match> matches = _unitOfWork.MatchRepository.GetAll();
-            var previousMatches = Mapper.Map<IEnumerable<MatchModel>>(matches);
-
+            var previousMatches = Mapper.Map<IEnumerable<MatchModel>>(matches).ToList();
             return GenerateMatchesForNextRound(existingPlayers, previousMatches);
+        }
+
+        public IEnumerable<MatchModel> GenerateMatchesForNextRound(IList<Player> players, IList<Match> matches)
+        {
+            throw new NotImplementedException();
         }
 
         public IEnumerable<MatchModel> GenerateMatchesForNextRound(IEnumerable<Player> players, IEnumerable<Match> matches)
         {
-            var existingPlayers = Mapper.Map<IEnumerable<PlayerModel>>(players);
-            var previousMatches = Mapper.Map<IEnumerable<MatchModel>>(matches);
-
+            var existingPlayers = Mapper.Map<IList<PlayerModel>>(players);
+            var previousMatches = Mapper.Map<IList<MatchModel>>(matches);
             return GenerateMatchesForNextRound(existingPlayers, previousMatches);
         }
 
-        public IEnumerable<MatchModel> GenerateMatchesForNextRound(IEnumerable<PlayerModel> players, IEnumerable<MatchModel> matches)
+        public IEnumerable<MatchModel> GenerateMatchesForNextRound(IList<PlayerModel> players, IList<MatchModel> matches)
         {
             return _matchGenerator.GetMatchesForNextRound(players, matches);
         }
@@ -82,24 +84,29 @@ namespace TournamentWebApi.BLL.Services
         public IEnumerable<MatchModel> GenerateMatches()
         {
             IEnumerable<Player> players = _unitOfWork.PlayerRepository.GetAll();
-            var existingPlayers = Mapper.Map<IEnumerable<PlayerModel>>(players);
+            var existingPlayers = Mapper.Map<IEnumerable<PlayerModel>>(players).ToList();
 
             IEnumerable<Match> matches = _unitOfWork.MatchRepository.GetAll();
-            var pastMatches = Mapper.Map<IEnumerable<MatchModel>>(matches);
+            var previousMatches = Mapper.Map<IEnumerable<MatchModel>>(matches).ToList();
+
+            IEnumerable<MatchModel> matchesForNextRound = _matchGenerator.GetMatchesForNextRound(existingPlayers, previousMatches);
+
+            return matchesForNextRound;
+        }
+
+        public IEnumerable<MatchModel> GenerateMatches(IList<Player> players, IList<Match> matches)
+        {
+            var existingPlayers = Mapper.Map<IList<PlayerModel>>(players);
+            var pastMatches = Mapper.Map<IList<MatchModel>>(matches);
 
             IEnumerable<MatchModel> matchesForNextRound = _matchGenerator.GetMatchesForNextRound(existingPlayers, pastMatches);
 
             return matchesForNextRound;
         }
 
-        public IEnumerable<MatchModel> GenerateMatches(IEnumerable<Player> players, IEnumerable<Match> matches)
+        public IEnumerable<MatchModel> GenerateMatches(IList<PlayerModel> players, IList<MatchModel> matches)
         {
-            var existingPlayers = Mapper.Map<IEnumerable<PlayerModel>>(players);
-            var pastMatches = Mapper.Map<IEnumerable<MatchModel>>(matches);
-
-            IEnumerable<MatchModel> matchesForNextRound = _matchGenerator.GetMatchesForNextRound(existingPlayers, pastMatches);
-
-            return matchesForNextRound;
+            throw new NotImplementedException();
         }
 
         public IEnumerable<MatchModel> GenerateMatches(IEnumerable<PlayerModel> players, IEnumerable<MatchModel> matches)
@@ -125,7 +132,7 @@ namespace TournamentWebApi.BLL.Services
         {
             IEnumerable<Player> players = _unitOfWork.PlayerRepository.GetAll();
             List<ScoreModel> scores = Mapper.Map<IEnumerable<ScoreModel>>(players).ToList();
-            var matchEntities = _unitOfWork.MatchRepository.GetRange(p => p.Winner.PlayerId != SpecialPlayerIds.WinnerIdForGameWithUndefinedResult);
+            var matchEntities = _unitOfWork.MatchRepository.GetRange(p => p.WinnerId != SpecialPlayerIds.WinnerIdForGameWithUndefinedResult);
             var matches = Mapper.Map<IEnumerable<MatchModel>>(matchEntities);
 
             CalculatePlayerScores(scores, players, matches);
@@ -136,7 +143,7 @@ namespace TournamentWebApi.BLL.Services
 
         public IEnumerable<MatchModel> GetPlayerMatches(int playerId)
         {
-            IEnumerable<Match> matchEntities = _unitOfWork.MatchRepository.GetRange(p => p.Player1.PlayerId == playerId || p.Player2.PlayerId == playerId);
+            IEnumerable<Match> matchEntities = _unitOfWork.MatchRepository.GetRange(p => p.PlayerId1 == playerId || p.PlayerId2 == playerId);
             var matches = Mapper.Map<IEnumerable<MatchModel>>(matchEntities);
 
             return matches;
@@ -148,7 +155,7 @@ namespace TournamentWebApi.BLL.Services
             return roundsCount;
         }
 
-        public IEnumerable<MatchModel> AssignRandomResultsForGeneratedMatches(IEnumerable<MatchModel> roundMatches)
+        public IEnumerable<MatchModel> AssignRandomResultsForGeneratedMatches(IList<MatchModel> roundMatches)
         {
             return _matchGenerator.AssignRandomResultsForGeneratedMatches(roundMatches);
         }

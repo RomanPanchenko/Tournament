@@ -42,12 +42,12 @@ namespace TournamentWebApi.BLL.Tests.UnitTests
 
             for (int i = 0; i < _tournamentServiceProvider.MatchService.GetTotalRoundsCount(players.Count); i++)
             {
-                var matchesWithoutResults = _tournamentServiceProvider.MatchService.GenerateMatchesForNextRound(players, matchesForNextRound);
-                var matchesWithResults = _tournamentServiceProvider.MatchService.AssignRandomResultsForGeneratedMatches(matchesWithoutResults);
+                var matchesWithoutResults = _tournamentServiceProvider.MatchService.GenerateMatchesForNextRound(players, matchesForNextRound).ToList();
+                var matchesWithResults = _tournamentServiceProvider.MatchService.AssignRandomResultsForGeneratedMatches(matchesWithoutResults).ToList();
                 matchesForNextRound.AddRange(matchesWithResults);
             }
 
-            Assert.IsTrue(matchesForNextRound.Count == 45);
+            Assert.IsTrue(matchesForNextRound.Count == 44);
         }
     }
 }

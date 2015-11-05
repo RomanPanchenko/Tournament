@@ -18,7 +18,7 @@ namespace TournamentWebApi.BLL.Services
 
         public PlayerModel Get(int playerId)
         {
-            Player player = _unitOfWork.PlayerRepository.Get(playerId);
+            Player player = _unitOfWork.PlayerRepository.GetById(playerId);
             var playerModel = Mapper.Map<PlayerModel>(player);
             return playerModel;
         }

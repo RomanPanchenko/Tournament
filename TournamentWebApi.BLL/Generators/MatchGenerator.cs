@@ -11,35 +11,33 @@ namespace TournamentWebApi.BLL.Generators
 {
     public class MatchGenerator : IMatchGenerator
     {
-        private readonly IPlayersHelper _playerHelper;
-        private readonly IMatchesHelper _matchHelper;
+        private readonly IPlayersHelper _playersHelper;
+        private readonly IMatchesHelper _matchesHelper;
 
-        public MatchGenerator(IMatchesHelper matchHelper, IPlayersHelper playerHelper)
+        public MatchGenerator(IMatchesHelper matchesHelper, IPlayersHelper playersHelper)
         {
-            _matchHelper = matchHelper;
-            _playerHelper = playerHelper;
+            _matchesHelper = matchesHelper;
+            _playersHelper = playersHelper;
         }
 
-        public IEnumerable<MatchModel> GetMatchesForNextRound(IEnumerable<PlayerModel> players, IEnumerable<MatchModel> previousMatches)
+        public IEnumerable<MatchModel> GetMatchesForNextRound(IList<PlayerModel> players, IList<MatchModel> previousMatches)
         {
             var matchesForNextRound = new List<MatchModel>();
 
-            List<MatchModel> matchModels = previousMatches.ToList();
-            List<PlayerModel> playerModels = players.ToList();
+            int round = previousMatches.Count == 0 ? 1 : previousMatches.Max(p => p.Round) + 1;
 
-            int round = matchModels.Count == 0 ? 1 : matchModels.OrderByDescending(p => p.Round).First().Round + 1;
-
-            players = _playerHelper.GetPlayersWithCalculatedRating(playerModels, matchModels);
-            playerModels = players.OrderByDescending(p => p.Rate).ToList();
+            List<PlayerModel> playerModels = _playersHelper.GetPlayersWithCalculatedRating(players, previousMatches)
+                                                    .OrderByDescending(p => p.Rate)
+                                                    .ToList();
 
             while (playerModels.Count > 0)
             {
                 PlayerModel player = playerModels.First();
                 playerModels.Remove(player);
 
-                MatchModel matchModel = _matchHelper.GetMatchModelForNextRound(player, playerModels, matchModels);
+                MatchModel matchModel = _matchesHelper.GetMatchModelForNextRound(player, playerModels, previousMatches);
                 matchModel.Round = round;
-                matchModel.Player1PlaysWhite = _playerHelper.PlayerCanPlayWithDefinedColor(player, ChessColor.White, matchModels);
+                matchModel.Player1PlaysWhite = _playersHelper.PlayerCanPlayWithDefinedColor(player, ChessColor.White, previousMatches);
                 matchModel.MatchStartTime = DateTime.Now;
                 matchModel.Winner = new PlayerModel { PlayerId = SpecialPlayerIds.WinnerIdForGameWithUndefinedResult };
 
@@ -50,7 +48,7 @@ namespace TournamentWebApi.BLL.Generators
             return matchesForNextRound;
         }
 
-        public IEnumerable<MatchModel> AssignRandomResultsForGeneratedMatches(IEnumerable<MatchModel> roundMatches)
+        public IEnumerable<MatchModel> AssignRandomResultsForGeneratedMatches(IList<MatchModel> roundMatches)
         {
             List<MatchModel> matches = roundMatches.ToList();
             var random = new Random(DateTime.Now.Millisecond);

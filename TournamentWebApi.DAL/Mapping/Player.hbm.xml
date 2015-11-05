@@ -1,24 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="TournamentWebApi.DAL" namespace="TournamentWebApi.DAL.Entities">
   <class name="Player" schema="public" table="Players">
+
+    <!-- PRIMARY KEY MAPPING -->
     <id name="PlayerId">
       <generator class="sequence" />
     </id>
+
+    <!-- COLUMNS MAPPING -->
     <property name="FirstName" />
     <property name="LastName" />
     <property name="RegistrationTime" />
     <property name="Rate" />
-    <bag name="Player1Matches" lazy="true" inverse="true">
-      <key column="PlayerId" not-null="true" />
-      <one-to-many class="TournamentWebApi.DAL.Entities.Match" />
-    </bag>
-    <bag name="Player2Matches" lazy="true" inverse="true">
-      <key column="PlayerId" not-null="true" />
-      <one-to-many class="TournamentWebApi.DAL.Entities.Match"/>
-    </bag>
-    <bag name="WinnerMatches" lazy="true" inverse="true">
-      <key column="PlayerId" not-null="true" />
-      <one-to-many class="TournamentWebApi.DAL.Entities.Match" />
-    </bag>
   </class>
 </hibernate-mapping>

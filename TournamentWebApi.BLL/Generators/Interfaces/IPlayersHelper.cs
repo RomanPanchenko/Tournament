@@ -13,7 +13,7 @@ namespace TournamentWebApi.BLL.Generators.Interfaces
         /// <param name="player2">Player 2</param>
         /// <param name="previousMatches">Played matches for all players</param>
         /// <returns>bool</returns>
-        bool PlayersCanPlayTogether(PlayerModel player1, PlayerModel player2, List<MatchModel> previousMatches);
+        bool PlayersCanPlayTogether(PlayerModel player1, PlayerModel player2, IList<MatchModel> previousMatches);
 
         /// <summary>
         ///     Gets list op players with calculated rating for each player
@@ -21,7 +21,7 @@ namespace TournamentWebApi.BLL.Generators.Interfaces
         /// <param name="players">Players to process</param>
         /// <param name="previousMatches">Played matches for all players</param>
         /// <returns>List of players</returns>
-        IEnumerable<PlayerModel> GetPlayersWithCalculatedRating(List<PlayerModel> players, List<MatchModel> previousMatches);
+        IEnumerable<PlayerModel> GetPlayersWithCalculatedRating(IList<PlayerModel> players, IList<MatchModel> previousMatches);
 
         /// <summary>
         ///     Whether player can play with given color

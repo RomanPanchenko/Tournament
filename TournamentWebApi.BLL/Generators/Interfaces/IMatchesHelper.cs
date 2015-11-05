@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using TournamentWebApi.BLL.Models;
+using TournamentWebApi.Core.Enums;
 
 namespace TournamentWebApi.BLL.Generators.Interfaces
 {
@@ -13,6 +14,6 @@ namespace TournamentWebApi.BLL.Generators.Interfaces
         /// <param name="playersToProcess">Candidates to play with given player</param>
         /// <param name="previousMatches">Previous matches</param>
         /// <returns>Generated match model</returns>
-        MatchModel GetMatchModelForNextRound(PlayerModel player, IEnumerable<PlayerModel> playersToProcess, List<MatchModel> previousMatches);
+        MatchModel GetMatchModelForNextRound(PlayerModel player, IEnumerable<PlayerModel> playersToProcess, IList<MatchModel> previousMatches);
     }
 }

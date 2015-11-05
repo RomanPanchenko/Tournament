@@ -22,7 +22,7 @@ namespace TournamentWebApi.BLL.Services
 
         public AccountModel Get(int id)
         {
-            Account account = _accountRepository.Get(id);
+            Account account = _accountRepository.GetById(id);
             var accountModel = Mapper.Map<AccountModel>(account);
             return accountModel;
         }

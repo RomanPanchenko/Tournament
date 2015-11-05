@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using TournamentWebApi.BLL.Generators.Interfaces;
 using TournamentWebApi.BLL.Models;
 using TournamentWebApi.Core.Constants;
@@ -17,7 +18,7 @@ namespace TournamentWebApi.BLL.Generators.Helpers
         public MatchModel GetMatchModelForNextRound(
             PlayerModel player,
             IEnumerable<PlayerModel> playersToProcess,
-            List<MatchModel> previousMatches)
+            IList<MatchModel> previousMatches)
         {
             var match = new MatchModel
             {
@@ -25,15 +26,7 @@ namespace TournamentWebApi.BLL.Generators.Helpers
                 Player2 = new PlayerModel { PlayerId = SpecialPlayerIds.WinnerIdForGameWithUndefinedResult }
             };
 
-            foreach (PlayerModel nextPlayer in playersToProcess)
-            {
-                if (_playerHelper.PlayersCanPlayTogether(player, nextPlayer, previousMatches))
-                {
-                    match.Player2 = nextPlayer;
-                    break;
-                }
-            }
-
+            match.Player2 = playersToProcess.FirstOrDefault(p => _playerHelper.PlayersCanPlayTogether(player, p, previousMatches));
             return match;
         }
     }

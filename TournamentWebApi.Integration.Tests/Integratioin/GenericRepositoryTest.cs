@@ -40,7 +40,7 @@ namespace TournamentWebApi.Integration.Tests.Integratioin
             IEnumerable<Player> players = _playerRepository.GetAll();
 
             // Assert
-            Assert.IsTrue(players.Count() == 23);
+            Assert.IsTrue(players.Count() == 21);
         }
 
         [Test]

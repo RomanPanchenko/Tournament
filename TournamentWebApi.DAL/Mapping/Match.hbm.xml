@@ -1,18 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="TournamentWebApi.DAL" namespace="TournamentWebApi.DAL.Entities">
   <class name="Match" schema="public" table="Matches">
+
+    <!-- PRIMARY KEY MAPPING -->
     <id name="MatchId">
       <generator class="sequence" />
     </id>
-    <many-to-one class="TournamentWebApi.DAL.Entities.Player" name="Player1" column="PlayerId" cascade="none">
-      <column name="PlayerId1" />
+
+    <!-- FOREIGN KEYS MAPPING -->
+    <many-to-one name="PlayerForeignKey1" class="Player">
+      <column name="playerid1" sql-type="integer" not-null="true" />
     </many-to-one>
-    <many-to-one class="TournamentWebApi.DAL.Entities.Player" name="Player2" column="PlayerId" cascade="none">
-      <column name="PlayerId2" />
+    <many-to-one name="PlayerForeignKey2" class="Player">
+      <column name="playerid2" sql-type="integer" not-null="true" />
     </many-to-one>
-    <many-to-one class="TournamentWebApi.DAL.Entities.Player" name="Winner" column="PlayerId" cascade="none">
-      <column name="WinnerId" />
+    <many-to-one name="PlayerForeignKey3" class="Player">
+      <column name="winnerid" sql-type="integer" not-null="true" />
     </many-to-one>
+
+    <!-- COLUMNS MAPPING -->
+    <property name="PlayerId1" column="playerid1" />
+    <property name="PlayerId2" column="playerid2" />
+    <property name="WinnerId" column="winnerid" />
     <property name="MatchStartTime" column="MatchStartTime" />
     <property name="Player1PlaysWhite" />
     <property name="Round" />

@@ -29,7 +29,7 @@ namespace TournamentWebApi.DAL.Interfaces
         /// </summary>
         /// <param name="id"></param>
         /// <returns>Entity</returns>
-        TEntity Get(int id);
+        TEntity GetById(int id);
 
         /// <summary>
         ///     Gets all entities from database

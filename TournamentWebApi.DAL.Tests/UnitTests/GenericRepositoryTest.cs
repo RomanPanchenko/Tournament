@@ -590,7 +590,7 @@ namespace TournamentWebApi.DAL.Tests.UnitTests
             var playerRepository = new GenericRepository<Player>(sessionFactoryMock.Object);
 
             // Act
-            Player player = playerRepository.Get(someId);
+            Player player = playerRepository.GetById(someId);
 
             // Assert
             sessionMock.Verify(s => s.Get<Player>(It.IsAny<object>()), Times.Once);

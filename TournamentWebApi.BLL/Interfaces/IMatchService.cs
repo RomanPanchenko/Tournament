@@ -60,7 +60,7 @@ namespace TournamentWebApi.BLL.Interfaces
         /// <param name="players">Players taking part in tournament</param>
         /// <param name="matches">List of previous matches in this tournament</param>
         /// <returns>MatchModel entities collection</returns>
-        IEnumerable<MatchModel> GenerateMatchesForNextRound(IEnumerable<PlayerModel> players, IEnumerable<MatchModel> matches);
+        IEnumerable<MatchModel> GenerateMatchesForNextRound(IList<PlayerModel> players, IList<MatchModel> matches);
 
         /// <summary>
         ///     Generates matches for all games
@@ -74,7 +74,7 @@ namespace TournamentWebApi.BLL.Interfaces
         /// <param name="players">Players taking part in tournament</param>
         /// <param name="matches">List of previous matches in this tournament</param>
         /// <returns>MatchModel entities collection</returns>
-        IEnumerable<MatchModel> GenerateMatches(IEnumerable<Player> players, IEnumerable<Match> matches);
+        IEnumerable<MatchModel> GenerateMatches(IList<Player> players, IList<Match> matches);
 
         /// <summary>
         ///     Generates matches for all games
@@ -82,7 +82,7 @@ namespace TournamentWebApi.BLL.Interfaces
         /// <param name="players">Players taking part in tournament</param>
         /// <param name="matches">List of previous matches in this tournament</param>
         /// <returns>MatchModel entities collection</returns>
-        IEnumerable<MatchModel> GenerateMatches(IEnumerable<PlayerModel> players, IEnumerable<MatchModel> matches);
+        IEnumerable<MatchModel> GenerateMatches(IList<PlayerModel> players, IList<MatchModel> matches);
 
         /// <summary>
         ///     Gets player score
@@ -116,6 +116,6 @@ namespace TournamentWebApi.BLL.Interfaces
         /// </summary>
         /// <param name="roundMatches">List of matches in the last round</param>
         /// <returns>MatchModel entities collection for the next tournament round. Players result are randomly assigned.</returns>
-        IEnumerable<MatchModel> AssignRandomResultsForGeneratedMatches(IEnumerable<MatchModel> roundMatches);
+        IEnumerable<MatchModel> AssignRandomResultsForGeneratedMatches(IList<MatchModel> roundMatches);
     }
 }

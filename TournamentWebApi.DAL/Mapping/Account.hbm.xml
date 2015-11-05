@@ -1,13 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="TournamentWebApi.DAL" namespace="TournamentWebApi.DAL.Entities">
   <class name="Account" schema="sec" table="Accounts">
+
+    <!-- PRIMARY KEY MAPPING -->
     <id name="AccountId">
       <generator class="sequence" />
     </id>
+
+    <!-- FOREIGN KEY TO LINK TABLE MAPPING -->
     <bag name="Roles" table="sec.accountsroleslink" inverse="true">
       <key column="accountid" />
       <many-to-many class="Role" column="roleid" />
     </bag>
+
+    <!-- COLUMNS MAPPING -->
     <property name="FirstName" />
     <property name="LastName" />
     <property name="Email" />

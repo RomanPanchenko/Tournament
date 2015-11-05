@@ -14,5 +14,10 @@ namespace TournamentWebApi.BLL.Models
         ///     Chess color
         /// </summary>
         public ChessColor ChessColor { get; set; }
+
+        /// <summary>
+        ///     Indicates if player loaded or just ID was initialized
+        /// </summary>
+        public bool IsLoaded { get; set; }
     }
 }
