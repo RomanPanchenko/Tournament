@@ -26,13 +26,14 @@ namespace TournamentWebApi.WEB.ApiControllers
         public HttpResponseMessage Get()
         {
             var httpStatusCode = HttpStatusCode.OK;
-            List<ScoreModel> scores = _servicesProvider.MatchService.GetScoreForAllPlayers().ToList();
-            if (!scores.Any())
+            IEnumerable<ScoreModel> scoreForAllPlayers = _servicesProvider.MatchService.GetScoreForAllPlayers();
+            ScoreListModel scoreListModel = _servicesProvider.MatchService.GetScoreListModel(scoreForAllPlayers);
+            if (!scoreListModel.Items.Any())
             {
                 httpStatusCode = HttpStatusCode.NotFound;
             }
 
-            return Request.CreateResponse(httpStatusCode, scores);
+            return Request.CreateResponse(httpStatusCode, scoreListModel);
         }
 
         // GET api/players/5/score

@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq;
+using AutoMapper;
 using System.Collections.Generic;
 using TournamentWebApi.BLL.Interfaces;
 using TournamentWebApi.BLL.Models;
@@ -28,6 +29,16 @@ namespace TournamentWebApi.BLL.Services
             IEnumerable<Player> players = _unitOfWork.PlayerRepository.GetAll();
             var playerModels = Mapper.Map<IEnumerable<PlayerModel>>(players);
             return playerModels;
+        }
+
+        public PlayerListModel GetPlayerListModel(IEnumerable<PlayerModel> playerModels)
+        {
+            var playerListModel = new PlayerListModel
+            {
+                Items = playerModels != null ? playerModels.ToList() : new List<PlayerModel>()
+            };
+
+            return playerListModel;
         }
     }
 }

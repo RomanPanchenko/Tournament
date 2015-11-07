@@ -17,5 +17,12 @@ namespace TournamentWebApi.BLL.Interfaces
         /// </summary>
         /// <returns>PlayerModel entities collection</returns>
         IEnumerable<PlayerModel> GetAllPlayers();
+
+        /// <summary>
+        ///     Gets ListModel for Players
+        /// </summary>
+        /// <param name="playerModels">List of Player models</param>
+        /// <returns></returns>
+        PlayerListModel GetPlayerListModel(IEnumerable<PlayerModel> playerModels);
     }
 }

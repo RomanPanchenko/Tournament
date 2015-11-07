@@ -160,6 +160,26 @@ namespace TournamentWebApi.BLL.Services
             return _matchGenerator.AssignRandomResultsForGeneratedMatches(roundMatches);
         }
 
+        public ScoreListModel GetScoreListModel(IEnumerable<ScoreModel> scoreModels)
+        {
+            var scoreListModel = new ScoreListModel
+            {
+                Items = scoreModels != null ? scoreModels.ToList() : new List<ScoreModel>()
+            };
+
+            return scoreListModel;
+        }
+
+        public MatchListModel GetMatchListModel(IEnumerable<MatchModel> matchModels)
+        {
+            var scoreListModel = new MatchListModel
+            {
+                Items = matchModels != null ? matchModels.ToList() : new List<MatchModel>()
+            };
+
+            return scoreListModel;
+        }
+
         private static void CalculatePlayerScores(IEnumerable<ScoreModel> scores, IEnumerable<Player> players, IEnumerable<MatchModel> matches)
         {
             // Dictionary<PlayerId, ScoreValue>

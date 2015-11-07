@@ -68,9 +68,14 @@
     <Compile Include="Interfaces\IRoleService.cs" />
     <Compile Include="Interfaces\ITournamentServiceProvider.cs" />
     <Compile Include="Models\AccountModel.cs" />
+    <Compile Include="Models\AccountListModel.cs" />
+    <Compile Include="Models\MatchListModel.cs" />
     <Compile Include="Models\MatchModel.cs" />
+    <Compile Include="Models\PlayerListModel.cs" />
     <Compile Include="Models\PlayerModel.cs" />
+    <Compile Include="Models\RoleListModel.cs" />
     <Compile Include="Models\RoleModel.cs" />
+    <Compile Include="Models\ScoreListModel.cs" />
     <Compile Include="Models\ScoreModel.cs" />
     <Compile Include="Models\PlayersPairModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

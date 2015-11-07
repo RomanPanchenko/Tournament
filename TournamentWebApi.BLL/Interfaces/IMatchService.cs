@@ -117,5 +117,19 @@ namespace TournamentWebApi.BLL.Interfaces
         /// <param name="roundMatches">List of matches in the last round</param>
         /// <returns>MatchModel entities collection for the next tournament round. Players result are randomly assigned.</returns>
         IEnumerable<MatchModel> AssignRandomResultsForGeneratedMatches(IList<MatchModel> roundMatches);
+
+        /// <summary>
+        ///     Gets ListModel for Scores 
+        /// </summary>
+        /// <param name="scoreModels">List of Score models</param>
+        /// <returns></returns>
+        ScoreListModel GetScoreListModel(IEnumerable<ScoreModel> scoreModels);
+
+        /// <summary>
+        ///     Gets ListModel for Matches
+        /// </summary>
+        /// <param name="matchModels">List of Match models</param>
+        /// <returns></returns>
+        MatchListModel GetMatchListModel(IEnumerable<MatchModel> matchModels);
     }
 }

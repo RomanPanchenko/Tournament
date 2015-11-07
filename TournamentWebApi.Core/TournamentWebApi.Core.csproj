@@ -43,6 +43,7 @@
     <Compile Include="Constants\Score.cs" />
     <Compile Include="Constants\SpecialPlayerIds.cs" />
     <Compile Include="Entities\AccountEntity.cs" />
+    <Compile Include="Entities\BaseListEntity.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\MatchEntity.cs" />
     <Compile Include="Entities\PlayerEntity.cs" />
